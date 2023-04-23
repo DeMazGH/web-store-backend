@@ -2,21 +2,21 @@ package ru.skypro.homework.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.CommentDTO;
+import ru.skypro.homework.dto.CommentDto;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
 public class CommentController {
     @GetMapping("{ad_pk}/comment")
-    public ResponseEntity<CommentDTO> getAdsComments(@PathVariable("ad_pk") int adPk) {
-        return ResponseEntity.ok(new CommentDTO());
+    public ResponseEntity<CommentDto> getAdsComments(@PathVariable("ad_pk") int adPk) {
+        return ResponseEntity.ok(new CommentDto());
     }
 
 
     @PostMapping("{ad_pk}/comment")
-    public ResponseEntity<CommentDTO> addAdsComment(@PathVariable("ad_pk") int adPk, @RequestBody CommentDTO adsCommentDto) {
-        return ResponseEntity.ok(new CommentDTO());
+    public ResponseEntity<CommentDto> addAdsComment(@PathVariable("ad_pk") int adPk, @RequestBody CommentDto adsCommentDto) {
+        return ResponseEntity.ok(new CommentDto());
     }
 
 
@@ -28,16 +28,16 @@ public class CommentController {
 
 
     @GetMapping("{ad_pk}/comment/{id}")
-    public ResponseEntity<CommentDTO> getAdsComment(@PathVariable("ad_pk") int adPk,
+    public ResponseEntity<CommentDto> getAdsComment(@PathVariable("ad_pk") int adPk,
                                                     @PathVariable int id) {
-        return ResponseEntity.ok(new CommentDTO());
+        return ResponseEntity.ok(new CommentDto());
     }
 
 
     @PatchMapping("{ad_pk}/comment/{id}")
-    public ResponseEntity<CommentDTO> updateAdsComment(@PathVariable("ad_pk") int adPk,
+    public ResponseEntity<CommentDto> updateAdsComment(@PathVariable("ad_pk") int adPk,
                                                        @PathVariable int id,
-                                                       @RequestBody CommentDTO comment) {
-        return ResponseEntity.ok(new CommentDTO());
+                                                       @RequestBody CommentDto comment) {
+        return ResponseEntity.ok(new CommentDto());
     }
 }
