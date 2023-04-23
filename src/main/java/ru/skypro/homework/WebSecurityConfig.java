@@ -54,7 +54,7 @@ public class WebSecurityConfig {
 //                    )
 
                 .cors()
-                .disable()
+                .and()
                 .httpBasic(withDefaults());
         return http.build();
     }
