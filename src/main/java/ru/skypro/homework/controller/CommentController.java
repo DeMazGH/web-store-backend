@@ -9,35 +9,35 @@ import ru.skypro.homework.dto.CommentDTO;
 @RequestMapping("/ads")
 public class CommentController {
     @GetMapping("{ad_pk}/comment")
-    public ResponseEntity<CommentDTO> getAdsComments(@PathVariable int ad_pk) {
+    public ResponseEntity<CommentDTO> getAdsComments(@PathVariable("ad_pk") int adPk) {
         return ResponseEntity.ok(new CommentDTO());
     }
 
 
     @PostMapping("{ad_pk}/comment")
-    public ResponseEntity<CommentDTO> addAdsComment(@PathVariable int ad_pk, @RequestBody CommentDTO adsCommentDto) {
+    public ResponseEntity<CommentDTO> addAdsComment(@PathVariable("ad_pk") int adPk, @RequestBody CommentDTO adsCommentDto) {
         return ResponseEntity.ok(new CommentDTO());
     }
 
 
     @DeleteMapping("{ad_pk}/comment/{id}")
-    public ResponseEntity<Void> deleteAdsComment(@PathVariable int ad_pk,
+    public ResponseEntity<Void> deleteAdsComment(@PathVariable("ad_pk") int adPk,
                                                  @PathVariable int id) {
         return ResponseEntity.ok().build();
     }
 
 
     @GetMapping("{ad_pk}/comment/{id}")
-    public ResponseEntity<CommentDTO> getAdsComment(@PathVariable int ad_pk,
-                                                       @PathVariable int id) {
+    public ResponseEntity<CommentDTO> getAdsComment(@PathVariable("ad_pk") int adPk,
+                                                    @PathVariable int id) {
         return ResponseEntity.ok(new CommentDTO());
     }
 
 
     @PatchMapping("{ad_pk}/comment/{id}")
-    public ResponseEntity<CommentDTO> updateAdsComment(@PathVariable int ad_pk,
-                                                          @PathVariable int id,
-                                                          @RequestBody CommentDTO comment) {
+    public ResponseEntity<CommentDTO> updateAdsComment(@PathVariable("ad_pk") int adPk,
+                                                       @PathVariable int id,
+                                                       @RequestBody CommentDTO comment) {
         return ResponseEntity.ok(new CommentDTO());
     }
 }
