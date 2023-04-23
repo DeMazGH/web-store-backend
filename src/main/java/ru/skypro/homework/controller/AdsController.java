@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
@@ -23,7 +24,7 @@ public class AdsController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdsDto> createAd(@RequestPart("properties") CreateAdsDto properties,
-                                           @RequestPart("image") String image) {
+                                           @RequestPart("image") MultipartFile image) {
         log.info("Was invoked method - createAd");
         return ResponseEntity.status(401).body(new AdsDto());
     }
@@ -53,7 +54,7 @@ public class AdsController {
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateAdImage(@PathVariable int id, @RequestPart("image") String image) {
+    public ResponseEntity<String> updateAdImage(@PathVariable int id, @RequestPart("image") MultipartFile image) {
         log.info("Was invoked method - updateAdImage");
         return ResponseEntity.ok("testString");
     }
