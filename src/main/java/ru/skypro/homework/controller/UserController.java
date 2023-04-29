@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
-import ru.skypro.homework.service.NewPasswordService;
 import ru.skypro.homework.service.UserService;
 
 import java.io.IOException;
@@ -18,18 +17,16 @@ import java.io.IOException;
 @CrossOrigin("http://localhost:3000")
 public class UserController {
 
-    private final NewPasswordService newPasswordService;
     private final UserService userService;
 
-    public UserController(NewPasswordService newPasswordService, UserService userService) {
-        this.newPasswordService = newPasswordService;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPasswordDto passwordDto) {
         log.info("Was invoked method - setPassword");
-        return newPasswordService.setPassword(passwordDto);
+        return userService.setPassword(passwordDto);
     }
 
     @GetMapping("/me")
