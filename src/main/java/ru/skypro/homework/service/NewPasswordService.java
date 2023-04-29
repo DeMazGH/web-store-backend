@@ -17,8 +17,9 @@ public class NewPasswordService {
         this.userRepository = userRepository;
     }
 
+    //этот метод лучше перенести в UserService?
     public ResponseEntity<?> setPassword(NewPasswordDto newPasswordDto) {
-
+        //можно ли реализовывать ответы на запрос в сервисах? или это не правильный подход?
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

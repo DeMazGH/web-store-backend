@@ -37,22 +37,37 @@ public class UserController {
         log.info("Was invoked method - getMe");
         //по API описано, что в каких-то случаях должен возвращаться ответ - Forbidden, не пойму в каком случае?
         if (!userService.authorizationCheck()) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else if (userService.getMe() == null) {
             return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(userService.getMe());
         }
-        return ResponseEntity.ok(userService.getMe());
     }
 
     @PatchMapping("/me")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
         log.info("Was invoked method - updateUser");
-        return ResponseEntity.ok(UserMapper.INSTANCE.userToUserDto(new User()));
+        //по API описано, что в каких-то случаях должен возвращаться ответ - Forbidden, не пойму в каком случае?
+        if (!userService.authorizationCheck()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if (userService.getMe() == null) {
+            return ResponseEntity.notFound().build();
+        } else if (userService.dataIsNew(userDto)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(userService.updateUser(userDto));
+        }
     }
 
-    @PatchMapping("/me/image")
-    public ResponseEntity<?> updateImage(@RequestBody MultipartFile image) {
-        log.info("Was invoked method - updateImage");
-        return ResponseEntity.ok().build();
-    }
+//    @PatchMapping("/me/image")
+//    public ResponseEntity<?> updateImage(@RequestBody MultipartFile image) {
+//        log.info("Was invoked method - updateImage");
+//        if (userService.getMe() == null) {
+//            return ResponseEntity.notFound().build();
+//        } else {
+//            userService.updateImage(image);
+//            return ResponseEntity.noContent().build();
+//        }
+//    }
 }
