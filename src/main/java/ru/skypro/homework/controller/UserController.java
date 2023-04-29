@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
+import ru.skypro.homework.entity.User;
+import ru.skypro.homework.mapper.UserMapper;
+import ru.skypro.homework.service.NewPasswordService;
 
 @Slf4j
 @RestController
@@ -13,22 +16,32 @@ import ru.skypro.homework.dto.UserDto;
 @CrossOrigin("http://localhost:3000")
 public class UserController {
 
+    private final NewPasswordService newPasswordService;
+
+    public UserController(NewPasswordService newPasswordService) {
+        this.newPasswordService = newPasswordService;
+    }
+
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPasswordDto passwordDto) {
         log.info("Was invoked method - setPassword");
-        return ResponseEntity.ok().build();
+        if (newPasswordService.setPassword(passwordDto)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> getMe() {
         log.info("Was invoked method - getMe");
-        return ResponseEntity.ok(new UserDto());
+        return ResponseEntity.ok(UserMapper.INSTANCE.userToUserDto(new User()));
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto user) {
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
         log.info("Was invoked method - updateUser");
-        return ResponseEntity.ok(new UserDto());
+        return ResponseEntity.ok(UserMapper.INSTANCE.userToUserDto(new User()));
     }
 
     @PatchMapping("/me/image")
