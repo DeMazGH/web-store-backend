@@ -25,11 +25,7 @@ public class UserController {
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPasswordDto passwordDto) {
         log.info("Was invoked method - setPassword");
-        if (newPasswordService.setPassword(passwordDto)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
+        return newPasswordService.setPassword(passwordDto);
     }
 
     @GetMapping("/me")

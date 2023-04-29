@@ -1,11 +1,15 @@
 package ru.skypro.homework.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.repository.UserRepository;
+
+import java.net.http.HttpResponse;
 
 @Service
 public class NewPasswordService {
@@ -15,22 +19,23 @@ public class NewPasswordService {
         this.userRepository = userRepository;
     }
 
-    public boolean setPassword(NewPasswordDto newPasswordDto) {
-        //Скорее всего нужно возвращать числовое значение (напр. int) соответствующее коду нужного http ответа
-        //и в контроллере сопоставлять код ответа и возвращать соответствующий
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
+    public ResponseEntity<?> setPassword(NewPasswordDto newPasswordDto) {
 
-        User currentUser = userRepository.findByEmail(username);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User currentUser = userRepository.findByEmail(auth.getName());
 
         if (currentUser == null) {
-            return false;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         } else if (!currentUser.getPassword().equals(newPasswordDto.getCurrentPassword())){
-            return false;
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             currentUser.setPassword(newPasswordDto.getNewPassword());
             userRepository.save(currentUser);
-            return true;
+            return ResponseEntity.ok().build();
         }
     }
 }
