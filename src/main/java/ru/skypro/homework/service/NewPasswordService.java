@@ -9,8 +9,6 @@ import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.repository.UserRepository;
 
-import java.net.http.HttpResponse;
-
 @Service
 public class NewPasswordService {
     private final UserRepository userRepository;
@@ -30,7 +28,7 @@ public class NewPasswordService {
 
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } else if (!currentUser.getPassword().equals(newPasswordDto.getCurrentPassword())){
+        } else if (!currentUser.getPassword().equals(newPasswordDto.getCurrentPassword())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             currentUser.setPassword(newPasswordDto.getNewPassword());
