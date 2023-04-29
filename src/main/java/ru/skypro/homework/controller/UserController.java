@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
-import ru.skypro.homework.entity.User;
-import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.service.NewPasswordService;
 import ru.skypro.homework.service.UserService;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -36,7 +36,7 @@ public class UserController {
     public ResponseEntity<UserDto> getMe() {
         log.info("Was invoked method - getMe");
         //по API описано, что в каких-то случаях должен возвращаться ответ - Forbidden, не пойму в каком случае?
-        if (!userService.authorizationCheck()) {
+        if (userService.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else if (userService.getMe() == null) {
             return ResponseEntity.notFound().build();
@@ -49,7 +49,7 @@ public class UserController {
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
         log.info("Was invoked method - updateUser");
         //по API описано, что в каких-то случаях должен возвращаться ответ - Forbidden, не пойму в каком случае?
-        if (!userService.authorizationCheck()) {
+        if (userService.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else if (userService.getMe() == null) {
             return ResponseEntity.notFound().build();
@@ -60,14 +60,14 @@ public class UserController {
         }
     }
 
-//    @PatchMapping("/me/image")
-//    public ResponseEntity<?> updateImage(@RequestBody MultipartFile image) {
-//        log.info("Was invoked method - updateImage");
-//        if (userService.getMe() == null) {
-//            return ResponseEntity.notFound().build();
-//        } else {
-//            userService.updateImage(image);
-//            return ResponseEntity.noContent().build();
-//        }
-//    }
+    @PatchMapping("/me/image")
+    public ResponseEntity<?> updateImage(@RequestBody MultipartFile image) throws IOException {
+        log.info("Was invoked method - updateImage");
+        if (userService.getMe() == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            userService.updateImage(image);
+            return ResponseEntity.noContent().build();
+        }
+    }
 }
