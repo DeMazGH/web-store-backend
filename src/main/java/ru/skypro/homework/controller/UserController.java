@@ -26,17 +26,20 @@ public class UserController {
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPasswordDto passwordDto) {
         log.info("Was invoked method - setPassword");
-        return userService.setPassword(passwordDto);
+        if (userService.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if (userService.setPassword(passwordDto)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> getMe() {
         log.info("Was invoked method - getMe");
-        //по API описано, что в каких-то случаях должен возвращаться ответ - Forbidden, не пойму в каком случае?
         if (userService.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (userService.getMe() == null) {
-            return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(userService.getMe());
         }
@@ -45,13 +48,8 @@ public class UserController {
     @PatchMapping("/me")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
         log.info("Was invoked method - updateUser");
-        //по API описано, что в каких-то случаях должен возвращаться ответ - Forbidden, не пойму в каком случае?
         if (userService.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (userService.getMe() == null) {
-            return ResponseEntity.notFound().build();
-        } else if (userService.dataIsNew(userDto)) {
-            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.ok(userService.updateUser(userDto));
         }
@@ -60,11 +58,11 @@ public class UserController {
     @PatchMapping("/me/image")
     public ResponseEntity<?> updateImage(@RequestBody MultipartFile image) throws IOException {
         log.info("Was invoked method - updateImage");
-        if (userService.getMe() == null) {
-            return ResponseEntity.notFound().build();
+        if (userService.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
             userService.updateImage(image);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         }
     }
 }

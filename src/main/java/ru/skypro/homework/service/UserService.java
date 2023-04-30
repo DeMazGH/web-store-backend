@@ -2,8 +2,6 @@ package ru.skypro.homework.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -34,27 +32,22 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<?> setPassword(NewPasswordDto newPasswordDto) {
-        //можно ли реализовывать ответы на запрос в сервисах? или это не правильный подход?
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        User currentUser = userRepository.findByEmail(auth.getName());
-
+    public boolean setPassword(NewPasswordDto newPasswordDto) {
+        log.info("Was invoked method - setPassword");
+        User currentUser = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return false;
         } else if (!currentUser.getPassword().equals(newPasswordDto.getCurrentPassword())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return false;
         } else {
             currentUser.setPassword(newPasswordDto.getNewPassword());
             userRepository.save(currentUser);
-            return ResponseEntity.ok().build();
+            return true;
         }
     }
 
     public UserDto getMe() {
+        log.info("Was invoked method - getMe");
         User currentUser = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         if (currentUser == null) {
             return null;
@@ -64,23 +57,20 @@ public class UserService {
     }
 
     public boolean userIsNotAuthorised() {
+        log.info("Was invoked method - userIsNotAuthorised");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth == null;
     }
 
     public UserDto updateUser(UserDto userDto) {
+        log.info("Was invoked method - updateUser");
         User newUserData = UserMapper.INSTANCE.userDtoToUser(userDto);
         userRepository.save(newUserData);
         return userDto;
     }
 
-    public boolean dataIsNew(UserDto userDto) {
-        User newUserData = UserMapper.INSTANCE.userDtoToUser(userDto);
-        User currentUserData = userRepository.findById(newUserData.getId()).get();
-        return !newUserData.equals(currentUserData);
-    }
-
     public void updateImage(MultipartFile image) throws IOException {
+        log.info("Was invoked method - updateImage");
         User currentUser = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         Path filePath = Path.of(imageDir, currentUser.getEmail() + "."
                 + getExtensions(Objects.requireNonNull(image.getOriginalFilename())));
