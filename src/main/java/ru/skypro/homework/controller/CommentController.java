@@ -1,19 +1,36 @@
 package ru.skypro.homework.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDto;
+import ru.skypro.homework.dto.ResponseWrapperCommentDto;
+import ru.skypro.homework.service.AuthValidator;
+import ru.skypro.homework.service.CommentService;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
 public class CommentController {
+
+    private final CommentService commentService;
+    private final AuthValidator authValidator;
+
+    public CommentController(CommentService commentService, AuthValidator authValidator) {
+        this.commentService = commentService;
+        this.authValidator = authValidator;
+    }
+
     @GetMapping("{ad_pk}/comment")
-    public ResponseEntity<CommentDto> getAdsComments(@PathVariable("ad_pk") int adPk) {
+    public ResponseEntity<ResponseWrapperCommentDto> getAdsComments(@PathVariable("ad_pk") int adPk) {
         log.info("Was invoked method - getAdsComments");
-        return ResponseEntity.ok(new CommentDto());
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else {
+            return ResponseEntity.ok(new ResponseWrapperCommentDto());
+        }
     }
 
 
