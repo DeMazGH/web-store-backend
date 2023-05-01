@@ -13,9 +13,13 @@ public interface CommentMapper {
 
     @Mapping(source = "id", target = "pk")
     @Mapping(source = "user.id", target = "author")
+    @Mapping(source = "user.image", target = "authorImage")
+    @Mapping(source = "user.firstName", target = "authorFirstName")
     CommentDto commentToCommentDto(Comment comment);
 
     @Mapping(source = "pk", target = "id")
     @Mapping(source = "author", target = "user.id")
+    @Mapping(source = "authorImage", target = "user.image")
+    @Mapping(source = "authorFirstName", target = "user.firstName")
     Comment commentDtoToComment(CommentDto commentDto);
 }

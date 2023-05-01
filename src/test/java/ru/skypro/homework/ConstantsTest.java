@@ -51,6 +51,8 @@ public class ConstantsTest {
         REGISTER_REQ_TEST.setRole(ROLE);
 
         COMMENT_DTO_TEST.setAuthor(USER_ID);
+        COMMENT_DTO_TEST.setAuthorImage(IMAGE);
+        COMMENT_DTO_TEST.setAuthorFirstName(FIRST_NAME);
         COMMENT_DTO_TEST.setCreatedAt(CREATED_AT);
         COMMENT_DTO_TEST.setPk(COMMENT_ID);
         COMMENT_DTO_TEST.setText(TEXT);
