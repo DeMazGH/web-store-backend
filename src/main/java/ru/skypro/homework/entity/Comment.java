@@ -1,9 +1,6 @@
 package ru.skypro.homework.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -14,11 +11,19 @@ public class Comment {
     private Integer id;
     private String text;
     private long createAt;
+    @ManyToOne
+    @JoinColumn(name = "ads_id")
+    private Ads ads;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public Comment(Integer id, String text, long createAt) {
+    public Comment(Integer id, String text, long createAt, Ads ads, User user) {
         this.id = id;
         this.text = text;
         this.createAt = createAt;
+        this.ads = ads;
+        this.user = user;
     }
 
     public Comment() {
@@ -48,17 +53,33 @@ public class Comment {
         this.createAt = createAt;
     }
 
+    public Ads getAds() {
+        return ads;
+    }
+
+    public void setAds(Ads ads) {
+        this.ads = ads;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return createAt == comment.createAt && Objects.equals(id, comment.id) && Objects.equals(text, comment.text);
+        return createAt == comment.createAt && Objects.equals(id, comment.id) && Objects.equals(text, comment.text) && Objects.equals(ads, comment.ads) && Objects.equals(user, comment.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, createAt);
+        return Objects.hash(id, text, createAt, ads, user);
     }
 
     @Override
@@ -67,6 +88,8 @@ public class Comment {
                 "id=" + id +
                 ", text='" + text + '\'' +
                 ", createAt=" + createAt +
+                ", ads=" + ads +
+                ", user=" + user +
                 '}';
     }
 }
