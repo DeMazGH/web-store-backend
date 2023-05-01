@@ -8,3 +8,6 @@ create table if not exists comment(
     ads_id              int,
     user_id             int
 );
+
+-- changeset demaz:2
+alter table comment rename column create_at to created_at;

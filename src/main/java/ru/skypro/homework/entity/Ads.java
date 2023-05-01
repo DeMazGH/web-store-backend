@@ -27,9 +27,11 @@ public class Ads {
     /**
      * id автора объявления
      */
-    private Integer author;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User author;
 
-    public Ads(Integer pk, Integer price, String description, String title, Integer author) {
+    public Ads(Integer pk, Integer price, String description, String title, User author) {
         this.pk = pk;
         this.price = price;
         this.description = description;
@@ -72,11 +74,11 @@ public class Ads {
         this.title = title;
     }
 
-    public Integer getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Integer author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
@@ -85,7 +87,7 @@ public class Ads {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ads ads = (Ads) o;
-        return pk.equals(ads.pk) && Objects.equals(price, ads.price) && Objects.equals(description, ads.description) && Objects.equals(title, ads.title) && Objects.equals(author, ads.author);
+        return Objects.equals(pk, ads.pk) && Objects.equals(price, ads.price) && Objects.equals(description, ads.description) && Objects.equals(title, ads.title) && Objects.equals(author, ads.author);
     }
 
     @Override

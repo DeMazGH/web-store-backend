@@ -8,3 +8,6 @@ create table if not exists ads(
     author              int,
     title               varchar
 );
+
+-- changeset demaz:1
+alter table ads rename column author to user_id;

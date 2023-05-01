@@ -10,7 +10,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String text;
-    private long createAt;
+    private long createdAt;
     @ManyToOne
     @JoinColumn(name = "ads_id")
     private Ads ads;
@@ -18,10 +18,10 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Comment(Integer id, String text, long createAt, Ads ads, User user) {
+    public Comment(Integer id, String text, long createdAt, Ads ads, User user) {
         this.id = id;
         this.text = text;
-        this.createAt = createAt;
+        this.createdAt = createdAt;
         this.ads = ads;
         this.user = user;
     }
@@ -45,12 +45,12 @@ public class Comment {
         this.text = text;
     }
 
-    public long getCreateAt() {
-        return createAt;
+    public long getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(long createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(long createAt) {
+        this.createdAt = createAt;
     }
 
     public Ads getAds() {
@@ -74,12 +74,12 @@ public class Comment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return createAt == comment.createAt && Objects.equals(id, comment.id) && Objects.equals(text, comment.text) && Objects.equals(ads, comment.ads) && Objects.equals(user, comment.user);
+        return createdAt == comment.createdAt && Objects.equals(id, comment.id) && Objects.equals(text, comment.text) && Objects.equals(ads, comment.ads) && Objects.equals(user, comment.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, createAt, ads, user);
+        return Objects.hash(id, text, createdAt, ads, user);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", createAt=" + createAt +
+                ", createAt=" + createdAt +
                 ", ads=" + ads +
                 ", user=" + user +
                 '}';
