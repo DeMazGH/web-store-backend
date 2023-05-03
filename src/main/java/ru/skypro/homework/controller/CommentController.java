@@ -36,10 +36,14 @@ public class CommentController {
 
 
     @PostMapping("{ad_pk}/comment")
-    public ResponseEntity<CommentDto> addAdsComment(@PathVariable("ad_pk") int adPk,
+    public ResponseEntity<CommentDto> addCommentToAd(@PathVariable("ad_pk") int adPk,
                                                     @RequestBody CreateCommentDto createdComment) {
         log.info("Was invoked method - addAdsComment");
-        return ResponseEntity.ok(new CommentDto());
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else {
+            return ResponseEntity.ok(new CommentDto());
+        }
     }
 
 
