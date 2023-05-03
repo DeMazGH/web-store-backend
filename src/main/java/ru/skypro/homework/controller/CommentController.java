@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDto;
+import ru.skypro.homework.dto.CreateCommentDto;
 import ru.skypro.homework.dto.ResponseWrapperCommentDto;
 import ru.skypro.homework.service.AuthValidator;
 import ru.skypro.homework.service.CommentService;
@@ -36,7 +37,7 @@ public class CommentController {
 
     @PostMapping("{ad_pk}/comment")
     public ResponseEntity<CommentDto> addAdsComment(@PathVariable("ad_pk") int adPk,
-                                                    @RequestBody CommentDto adsCommentDto) {
+                                                    @RequestBody CreateCommentDto createdComment) {
         log.info("Was invoked method - addAdsComment");
         return ResponseEntity.ok(new CommentDto());
     }
