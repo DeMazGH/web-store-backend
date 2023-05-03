@@ -29,7 +29,7 @@ public class CommentController {
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
-            return ResponseEntity.ok(new ResponseWrapperCommentDto());
+            return ResponseEntity.ok(commentService.getAdsComments(adPk));
         }
     }
 
