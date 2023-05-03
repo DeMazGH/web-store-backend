@@ -3,40 +3,13 @@ package ru.skypro.homework.mapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.skypro.homework.dto.RegisterReq;
-import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static ru.skypro.homework.ConstantsTest.*;
 
 class UserMapperTest {
-    private final Integer ID = 1;
-    private final String EMAIL = "user@gmail.com";
-    private final String FIRST_NAME = "first name";
-    private final String LAST_NAME = "last name";
-    private final String PHONE = "+79876543211";
-    private final String IMAGE = "image path";
-    private final String PASSWORD = "password";
-    private final Role ROLE = Role.USER;
-    private final User USER_TEST = new User(ID, EMAIL, FIRST_NAME, LAST_NAME, PHONE, IMAGE, PASSWORD, ROLE);
-    private final UserDto USER_DTO_TEST = new UserDto();
-    private final RegisterReq REGISTER_REQ_TEST = new RegisterReq();
-
-    {
-        USER_DTO_TEST.setId(ID);
-        USER_DTO_TEST.setEmail(EMAIL);
-        USER_DTO_TEST.setFirstName(FIRST_NAME);
-        USER_DTO_TEST.setLastName(LAST_NAME);
-        USER_DTO_TEST.setPhone(PHONE);
-        USER_DTO_TEST.setImage(IMAGE);
-
-        REGISTER_REQ_TEST.setUsername(EMAIL);
-        REGISTER_REQ_TEST.setPassword(PASSWORD);
-        REGISTER_REQ_TEST.setFirstName(FIRST_NAME);
-        REGISTER_REQ_TEST.setLastName(LAST_NAME);
-        REGISTER_REQ_TEST.setPhone(PHONE);
-        REGISTER_REQ_TEST.setRole(ROLE);
-    }
 
     @Test
     void shouldMapUserToUserDto() {
@@ -50,7 +23,7 @@ class UserMapperTest {
         User actual = UserMapper.INSTANCE.userDtoToUser(USER_DTO_TEST);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getId()).isEqualTo(ID);
+        assertThat(actual.getId()).isEqualTo(USER_ID);
         assertThat(actual.getEmail()).isEqualTo(EMAIL);
         assertThat(actual.getFirstName()).isEqualTo(FIRST_NAME);
         assertThat(actual.getLastName()).isEqualTo(LAST_NAME);
