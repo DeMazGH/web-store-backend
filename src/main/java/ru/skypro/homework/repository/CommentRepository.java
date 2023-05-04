@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-    List<Comment> findByAds_Pk(int ads_id);
+    List<Comment> findByAds_Pk(int adsId);
+
+    Comment findById(int commentId);
 }

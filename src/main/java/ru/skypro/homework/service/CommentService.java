@@ -42,4 +42,8 @@ public class CommentService {
         Comment savedComment = commentRepository.save(newComment);
         return CommentMapper.INSTANCE.commentToCommentDto(savedComment);
     }
+
+    public void deleteAdsComment(int adId, int commentId) {
+
+    }
 }

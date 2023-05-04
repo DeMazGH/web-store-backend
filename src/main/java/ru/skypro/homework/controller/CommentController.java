@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateCommentDto;
 import ru.skypro.homework.dto.ResponseWrapperCommentDto;
+import ru.skypro.homework.service.AccessRightValidator;
 import ru.skypro.homework.service.AuthValidator;
 import ru.skypro.homework.service.CommentService;
 
@@ -18,10 +19,12 @@ public class CommentController {
 
     private final CommentService commentService;
     private final AuthValidator authValidator;
+    private final AccessRightValidator accessRightValidator;
 
-    public CommentController(CommentService commentService, AuthValidator authValidator) {
+    public CommentController(CommentService commentService, AuthValidator authValidator, AccessRightValidator accessRightValidator) {
         this.commentService = commentService;
         this.authValidator = authValidator;
+        this.accessRightValidator = accessRightValidator;
     }
 
     @GetMapping("{ad_pk}/comment")
@@ -42,22 +45,28 @@ public class CommentController {
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
-            return ResponseEntity.ok(new CommentDto());
+            return ResponseEntity.ok(commentService.addCommentToAd(adPk, createdComment));
         }
     }
 
 
     @DeleteMapping("{ad_pk}/comment/{id}")
-    public ResponseEntity<Void> deleteAdsComment(@PathVariable("ad_pk") int adPk,
-                                                 @PathVariable int id) {
+    public ResponseEntity<Void> deleteAdsComment(@PathVariable("ad_pk") int adId,
+                                                 @PathVariable("id") int commentId) {
         log.info("Was invoked method - deleteAdsComment");
-        return ResponseEntity.ok().build();
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if (!accessRightValidator.userHaveAccess(commentId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            return null;
+        }
     }
 
 
     @GetMapping("{ad_pk}/comment/{id}")
-    public ResponseEntity<CommentDto> getAdsComment(@PathVariable("ad_pk") int adPk,
-                                                    @PathVariable int id) {
+    public ResponseEntity<CommentDto> getAdsComment(@PathVariable("ad_pk") int adId,
+                                                    @PathVariable("id") int commentId) {
         log.info("Was invoked method - getAdsComment");
         return ResponseEntity.ok(new CommentDto());
     }
