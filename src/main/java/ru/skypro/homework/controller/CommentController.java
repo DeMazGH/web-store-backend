@@ -28,19 +28,19 @@ public class CommentController {
     }
 
     @GetMapping("{ad_pk}/comment")
-    public ResponseEntity<ResponseWrapperCommentDto> getAdsComments(@PathVariable("ad_pk") int adPk) {
-        log.info("Was invoked method - getAdsComments");
+    public ResponseEntity<ResponseWrapperCommentDto> getAdComments(@PathVariable("ad_pk") int adPk) {
+        log.info("Was invoked method - getAdComments");
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
-            return ResponseEntity.ok(commentService.getAdsComments(adPk));
+            return ResponseEntity.ok(commentService.getAdComments(adPk));
         }
     }
 
 
     @PostMapping("{ad_pk}/comment")
     public ResponseEntity<CommentDto> addCommentToAd(@PathVariable("ad_pk") int adPk,
-                                                    @RequestBody CreateCommentDto createdComment) {
+                                                     @RequestBody CreateCommentDto createdComment) {
         log.info("Was invoked method - addAdsComment");
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -49,7 +49,8 @@ public class CommentController {
         }
     }
 
-
+    //Зачем нам здесь id объявления, если мы сразу можем удалить коммент по его id?
+    //Или нужно чтобы пользователь мог удалять чужие комменты в своих объявлениях?
     @DeleteMapping("{ad_pk}/comment/{id}")
     public ResponseEntity<Void> deleteAdsComment(@PathVariable("ad_pk") int adId,
                                                  @PathVariable("id") int commentId) {
@@ -59,25 +60,24 @@ public class CommentController {
         } else if (!accessRightValidator.userHaveAccess(commentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
-            return null;
+            commentService.deleteAdsComment(commentId);
+            return ResponseEntity.ok().build();
         }
     }
 
-
-    @GetMapping("{ad_pk}/comment/{id}")
-    public ResponseEntity<CommentDto> getAdsComment(@PathVariable("ad_pk") int adId,
-                                                    @PathVariable("id") int commentId) {
-        log.info("Was invoked method - getAdsComment");
-        return ResponseEntity.ok(new CommentDto());
-    }
-
-
+    //Зачем нам здесь id объявления, если мы сразу можем изменить коммент по его id?
     @PatchMapping("{ad_pk}/comment/{id}")
-    public ResponseEntity<CommentDto> updateAdsComment(@PathVariable("ad_pk") int adPk,
-                                                       @PathVariable int id,
-                                                       @RequestBody CommentDto comment) {
-        log.info("Was invoked method - updateAdsComment");
-        return ResponseEntity.ok(new CommentDto());
+    public ResponseEntity<CommentDto> updateAdComment(@PathVariable("ad_pk") int adId,
+                                                      @PathVariable("id") int commentId,
+                                                      @RequestBody CommentDto newData) {
+        log.info("Was invoked method - updateAdComment");
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if (!accessRightValidator.userHaveAccess(commentId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            return ResponseEntity.ok(commentService.updateAdComment(commentId, newData));
+        }
     }
 }
 
