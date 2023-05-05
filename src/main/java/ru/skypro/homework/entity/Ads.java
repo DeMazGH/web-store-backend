@@ -31,12 +31,15 @@ public class Ads {
     @JoinColumn(name = "user_id")
     private User author;
 
-    public Ads(Integer id, Integer price, String description, String title, User author) {
+    private String image;
+
+    public Ads(Integer id, Integer price, String description, String title, User author, String image) {
         this.id = id;
         this.price = price;
         this.description = description;
         this.title = title;
         this.author = author;
+        this.image = image;
     }
 
     public Ads() {
@@ -82,27 +85,36 @@ public class Ads {
         this.author = author;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ads ads = (Ads) o;
-        return Objects.equals(id, ads.id) && Objects.equals(price, ads.price) && Objects.equals(description, ads.description) && Objects.equals(title, ads.title) && Objects.equals(author, ads.author);
+        return Objects.equals(id, ads.id) && Objects.equals(price, ads.price) && Objects.equals(description, ads.description) && Objects.equals(title, ads.title) && Objects.equals(author, ads.author) && Objects.equals(image, ads.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, price, description, title, author);
+        return Objects.hash(id, price, description, title, author, image);
     }
 
     @Override
     public String toString() {
         return "Ads{" +
-                "pk=" + id +
+                "id=" + id +
                 ", price=" + price +
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +
                 ", author=" + author +
+                ", image='" + image + '\'' +
                 '}';
     }
 }

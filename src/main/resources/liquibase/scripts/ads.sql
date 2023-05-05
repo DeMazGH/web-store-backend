@@ -14,3 +14,6 @@ alter table ads rename column author to user_id;
 
 -- changeset demaz:2
 alter table ads rename column pk to id;
+
+-- changeset demaz:3
+alter table ads add column image varchar;
