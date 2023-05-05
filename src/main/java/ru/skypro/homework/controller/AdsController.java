@@ -9,6 +9,7 @@ import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.ResponseWrapperAdsDto;
+import ru.skypro.homework.service.AdsService;
 
 @Slf4j
 @RestController
@@ -16,10 +17,16 @@ import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 @CrossOrigin(value = "http://localhost:3000")
 public class AdsController {
 
+    AdsService adsService;
+
+    public AdsController(AdsService adsService) {
+        this.adsService = adsService;
+    }
+
     @GetMapping()
     public ResponseEntity<ResponseWrapperAdsDto> getAllAds() {
         log.info("Was invoked method - getAllAds");
-        return ResponseEntity.ok(new ResponseWrapperAdsDto());
+        return ResponseEntity.ok(adsService.getAllAds());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
