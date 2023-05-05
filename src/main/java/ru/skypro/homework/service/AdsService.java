@@ -55,4 +55,17 @@ public class AdsService {
         log.info("Was invoked method - deleteAd");
         adsRepository.deleteById(adId);
     }
+
+    public AdsDto updateAd(int adId, CreateAdsDto newAdData) {
+        log.info("Was invoked method - updateAd");
+
+        Ads oldAdData = adsRepository.findById(adId);
+        oldAdData.setDescription(newAdData.getDescription());
+        oldAdData.setPrice(newAdData.getPrice());
+        oldAdData.setTitle(newAdData.getTitle());
+
+        Ads updatedAd = adsRepository.save(oldAdData);
+
+        return AdsMapper.INSTANCE.adsToAdsDto(updatedAd);
+    }
 }

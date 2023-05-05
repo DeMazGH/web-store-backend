@@ -71,9 +71,15 @@ public class AdsController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AdsDto> updateAd(@PathVariable int id, @RequestBody CreateAdsDto adProperties) {
+    public ResponseEntity<AdsDto> updateAd(@PathVariable("id") int adId, @RequestBody CreateAdsDto newAdData) {
         log.info("Was invoked method - updateAd");
-        return ResponseEntity.ok(new AdsDto());
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if (!accessRightValidator.userHaveAccessToAd(adId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            return ResponseEntity.ok(adsService.updateAd(adId, newAdData));
+        }
     }
 
     @GetMapping("/me")
