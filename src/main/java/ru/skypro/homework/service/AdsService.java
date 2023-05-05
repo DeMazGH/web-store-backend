@@ -77,6 +77,16 @@ public class AdsService {
         return ResponseWrapperAdsDtoMapper.INSTANCE.toResponseWrapperAdsDto(adsRepository.findAllByAuthor(getAuthUser()));
     }
 
+    public String updateAdImage(int adId, MultipartFile adImage) {
+        log.info("Was invoked method - updateAdImage");
+
+        Ads oldAdData = adsRepository.findById(adId);
+//        oldAdData.setImage();   здесь будет метод изменения картинки объявления
+
+        Ads updatedAd = adsRepository.save(oldAdData);
+        return updatedAd.getImage();
+    }
+
     private User getAuthUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }

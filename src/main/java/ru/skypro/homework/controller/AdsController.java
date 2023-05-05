@@ -93,8 +93,16 @@ public class AdsController {
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateAdImage(@PathVariable int id, @RequestPart("image") MultipartFile image) {
+    public ResponseEntity<String> updateAdImage(@PathVariable("id") int adId,
+                                                @RequestPart("image") MultipartFile adImage) {
         log.info("Was invoked method - updateAdImage");
-        return ResponseEntity.ok("testString");
+
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if (!accessRightValidator.userHaveAccessToAd(adId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            return ResponseEntity.ok(adsService.updateAdImage(adId, adImage));
+        }
     }
 }
