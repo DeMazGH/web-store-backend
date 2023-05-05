@@ -11,7 +11,7 @@ public class Ads {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer pk;
+    private Integer id;
     /**
      * цена объявления
      */
@@ -31,8 +31,8 @@ public class Ads {
     @JoinColumn(name = "user_id")
     private User author;
 
-    public Ads(Integer pk, Integer price, String description, String title, User author) {
-        this.pk = pk;
+    public Ads(Integer id, Integer price, String description, String title, User author) {
+        this.id = id;
         this.price = price;
         this.description = description;
         this.title = title;
@@ -42,12 +42,12 @@ public class Ads {
     public Ads() {
     }
 
-    public Integer getPk() {
-        return pk;
+    public Integer getId() {
+        return id;
     }
 
-    public void setPk(Integer pk) {
-        this.pk = pk;
+    public void setId(Integer pk) {
+        this.id = pk;
     }
 
     public Integer getPrice() {
@@ -87,18 +87,18 @@ public class Ads {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ads ads = (Ads) o;
-        return Objects.equals(pk, ads.pk) && Objects.equals(price, ads.price) && Objects.equals(description, ads.description) && Objects.equals(title, ads.title) && Objects.equals(author, ads.author);
+        return Objects.equals(id, ads.id) && Objects.equals(price, ads.price) && Objects.equals(description, ads.description) && Objects.equals(title, ads.title) && Objects.equals(author, ads.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pk, price, description, title, author);
+        return Objects.hash(id, price, description, title, author);
     }
 
     @Override
     public String toString() {
         return "Ads{" +
-                "pk=" + pk +
+                "pk=" + id +
                 ", price=" + price +
                 ", description='" + description + '\'' +
                 ", title='" + title + '\'' +

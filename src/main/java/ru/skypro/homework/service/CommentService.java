@@ -32,7 +32,7 @@ public class CommentService {
 
     public ResponseWrapperCommentDto getAdComments(int adId) {
         log.info("Was invoked method - getAdComments");
-        return ResponseWrapperCommentDtoMapper.INSTANCE.toResponseWrapperCommentDto(commentRepository.findByAds_Pk(adId));
+        return ResponseWrapperCommentDtoMapper.INSTANCE.toResponseWrapperCommentDto(commentRepository.findByAds_Id(adId));
     }
 
     public CommentDto addCommentToAd(int adId, CreateCommentDto createdComment) {
