@@ -2,6 +2,7 @@ package ru.skypro.homework.mapper;
 
 import org.junit.jupiter.api.Test;
 import ru.skypro.homework.dto.CommentDto;
+import ru.skypro.homework.dto.CreateCommentDto;
 import ru.skypro.homework.entity.Comment;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -32,6 +33,22 @@ class CommentMapperTest {
         assertThat(actual.getUser().getFirstName()).isEqualTo(FIRST_NAME);
         assertThat(actual.getCreatedAt()).isEqualTo(CREATED_AT);
         assertThat(actual.getId()).isEqualTo(COMMENT_ID_1);
+        assertThat(actual.getText()).isEqualTo(TEXT);
+    }
+
+    @Test
+    void shouldMapCreateCommentDtoToComment() {
+        Comment actual = CommentMapper.INSTANCE.createCommentDtoToComment(CREATE_COMMENT_DTO_TEST);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getText()).isEqualTo(TEXT);
+    }
+
+    @Test
+    void shouldMapCommentToCreateCommentDto() {
+        CreateCommentDto actual = CommentMapper.INSTANCE.commentToCreateCommentDto(COMMENT_TEST_1);
+
+        assertThat(actual).isNotNull();
         assertThat(actual.getText()).isEqualTo(TEXT);
     }
 }

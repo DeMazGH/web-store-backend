@@ -11,3 +11,9 @@ create table if not exists ads(
 
 -- changeset demaz:1
 alter table ads rename column author to user_id;
+
+-- changeset demaz:2
+alter table ads rename column pk to id;
+
+-- changeset demaz:3
+alter table ads add column image varchar;
