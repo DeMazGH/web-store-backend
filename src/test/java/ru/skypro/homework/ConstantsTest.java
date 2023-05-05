@@ -28,6 +28,7 @@ public class ConstantsTest {
     public static final Integer PRICE = 99;
     public static final String DESCRIPTION = "description";
     public static final String TITLE = "title";
+    public static final String AD_IMAGE = "ad image path";
 
     public static final User USER_TEST = new User(USER_ID, EMAIL, FIRST_NAME, LAST_NAME, PHONE, IMAGE, PASSWORD, ROLE);
 
@@ -35,7 +36,7 @@ public class ConstantsTest {
 
     public static final RegisterReq REGISTER_REQ_TEST = new RegisterReq();
 
-    public static final Ads ADS_TEST = new Ads(ADS_ID, PRICE, DESCRIPTION, TITLE, USER_TEST);
+    public static final Ads ADS_TEST = new Ads(ADS_ID, PRICE, DESCRIPTION, TITLE, USER_TEST, AD_IMAGE);
 
     public static final Comment COMMENT_TEST_1 = new Comment(COMMENT_ID_1, TEXT, CREATED_AT, ADS_TEST, USER_TEST);
     public static final Comment COMMENT_TEST_2 = new Comment(COMMENT_ID_2, TEXT, CREATED_AT, ADS_TEST, USER_TEST);

@@ -1,6 +1,7 @@
 package ru.skypro.homework.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 import ru.skypro.homework.service.AdsService;
+import ru.skypro.homework.service.AuthValidator;
 
 @Slf4j
 @RestController
@@ -19,8 +21,11 @@ public class AdsController {
 
     AdsService adsService;
 
-    public AdsController(AdsService adsService) {
+    AuthValidator authValidator;
+
+    public AdsController(AdsService adsService, AuthValidator authValidator) {
         this.adsService = adsService;
+        this.authValidator = authValidator;
     }
 
     @GetMapping()
@@ -33,7 +38,11 @@ public class AdsController {
     public ResponseEntity<AdsDto> createAd(@RequestPart("properties") CreateAdsDto properties,
                                            @RequestPart("image") MultipartFile image) {
         log.info("Was invoked method - createAd");
-        return ResponseEntity.status(401).body(new AdsDto());
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else {
+            return ResponseEntity.ok(adsService.createAd(properties, image));
+        }
     }
 
     @GetMapping("/{id}")
