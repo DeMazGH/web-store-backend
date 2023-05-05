@@ -50,4 +50,9 @@ public class AdsService {
             return AdsMapper.INSTANCE.adToFullAdsDto(ad);
         }
     }
+
+    public void deleteAd(int adId) {
+        log.info("Was invoked method - deleteAd");
+        adsRepository.deleteById(adId);
+    }
 }

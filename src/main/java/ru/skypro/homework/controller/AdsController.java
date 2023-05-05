@@ -10,6 +10,7 @@ import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.ResponseWrapperAdsDto;
+import ru.skypro.homework.service.AccessRightValidator;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.AuthValidator;
 
@@ -20,12 +21,13 @@ import ru.skypro.homework.service.AuthValidator;
 public class AdsController {
 
     AdsService adsService;
-
     AuthValidator authValidator;
+    AccessRightValidator accessRightValidator;
 
-    public AdsController(AdsService adsService, AuthValidator authValidator) {
+    public AdsController(AdsService adsService, AuthValidator authValidator, AccessRightValidator accessRightValidator) {
         this.adsService = adsService;
         this.authValidator = authValidator;
+        this.accessRightValidator = accessRightValidator;
     }
 
     @GetMapping()
@@ -56,9 +58,16 @@ public class AdsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAd(@PathVariable int id) {
+    public ResponseEntity<?> deleteAd(@PathVariable("id") int adId) {
         log.info("Was invoked method - deleteAd");
-        return ResponseEntity.ok().build();
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else if (!accessRightValidator.userHaveAccessToAd(adId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else {
+            adsService.deleteAd(adId);
+            return ResponseEntity.ok().build();
+        }
     }
 
     @PatchMapping("/{id}")

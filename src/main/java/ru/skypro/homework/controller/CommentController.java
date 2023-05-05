@@ -57,7 +57,7 @@ public class CommentController {
         log.info("Was invoked method - deleteAdsComment");
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (!accessRightValidator.userHaveAccess(commentId)) {
+        } else if (!accessRightValidator.userHaveAccessToComment(commentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             commentService.deleteAdsComment(commentId);
@@ -73,7 +73,7 @@ public class CommentController {
         log.info("Was invoked method - updateAdComment");
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (!accessRightValidator.userHaveAccess(commentId)) {
+        } else if (!accessRightValidator.userHaveAccessToComment(commentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             return ResponseEntity.ok(commentService.updateAdComment(commentId, newData));
