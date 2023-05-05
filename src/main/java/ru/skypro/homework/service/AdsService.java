@@ -33,7 +33,7 @@ public class AdsService {
         return ResponseWrapperAdsDtoMapper.INSTANCE.toResponseWrapperAdsDto(adsRepository.findAll());
     }
 
-    public AdsDto createAd(CreateAdsDto properties, MultipartFile image) {
+    public AdsDto createAd(CreateAdsDto properties, MultipartFile adImage) {
         log.info("Was invoked method - createAd");
         Ads newAd = AdsMapper.INSTANCE.createAdsDtoToAds(properties);
         newAd.setAuthor(getAuthUser());

@@ -15,17 +15,17 @@ public interface AdsMapper {
 
     @Mapping(source = "pk", target = "id")
     @Mapping(source = "author", target = "author.id")
-    public Ads adsDtoToAds(AdsDto adsDto);
+    Ads adsDtoToAds(AdsDto adsDto);
 
     @Mapping(source = "id", target = "pk")
     @Mapping(source = "author.id", target = "author")
-    public AdsDto adsToAdsDto(Ads ad);
+    AdsDto adsToAdsDto(Ads ad);
 
-    public Ads createAdsDtoToAds(CreateAdsDto createAdsDto);
+    Ads createAdsDtoToAds(CreateAdsDto createAdsDto);
 
     @Mapping(target = "authorFirstName", source = "ad.author.firstName")
     @Mapping(target = "authorLastName", source = "ad.author.lastName")
     @Mapping(target = "email", source = "ad.author.email")
     @Mapping(target = "phone", source = "ad.author.phone")
-    public FullAdsDto adToFullAdsDto(Ads ad);
+    FullAdsDto adToFullAdsDto(Ads ad);
 }

@@ -38,12 +38,12 @@ public class AdsController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdsDto> createAd(@RequestPart("properties") CreateAdsDto properties,
-                                           @RequestPart("image") MultipartFile image) {
+                                           @RequestPart("image") MultipartFile adImage) {
         log.info("Was invoked method - createAd");
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
-            return ResponseEntity.ok(adsService.createAd(properties, image));
+            return ResponseEntity.ok(adsService.createAd(properties, adImage));
         }
     }
 
