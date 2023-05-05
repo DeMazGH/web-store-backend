@@ -85,7 +85,11 @@ public class AdsController {
     @GetMapping("/me")
     public ResponseEntity<ResponseWrapperAdsDto> getMyAds() {
         log.info("Was invoked method - getMyAds");
-        return ResponseEntity.ok(new ResponseWrapperAdsDto());
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else {
+            return ResponseEntity.ok(adsService.getMyAds());
+        }
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

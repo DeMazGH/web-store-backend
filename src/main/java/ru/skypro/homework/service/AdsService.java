@@ -9,6 +9,7 @@ import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 import ru.skypro.homework.entity.Ads;
+import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mapper.AdsMapper;
 import ru.skypro.homework.mapper.ResponseWrapperAdsDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
@@ -35,7 +36,7 @@ public class AdsService {
     public AdsDto createAd(CreateAdsDto properties, MultipartFile image) {
         log.info("Was invoked method - createAd");
         Ads newAd = AdsMapper.INSTANCE.createAdsDtoToAds(properties);
-        newAd.setAuthor(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()));
+        newAd.setAuthor(getAuthUser());
         //Здесь будет метод для получения картинки объявления
         Ads createdAd = adsRepository.save(newAd);
         return AdsMapper.INSTANCE.adsToAdsDto(createdAd);
@@ -44,6 +45,8 @@ public class AdsService {
     public FullAdsDto getInfoAboutAd(int adId) {
         log.info("Was invoked method - getInfoAboutAd");
         Ads ad = adsRepository.findById(adId);
+        // у нас же может из репозитория вместо сущности возвратиться null? нужно делать проверки на null?
+        //это вопрос про все сущности (user, ads, comment)
         if (ad == null) {
             return null;
         } else {
@@ -67,5 +70,14 @@ public class AdsService {
         Ads updatedAd = adsRepository.save(oldAdData);
 
         return AdsMapper.INSTANCE.adsToAdsDto(updatedAd);
+    }
+
+    public ResponseWrapperAdsDto getMyAds() {
+        log.info("Was invoked method - getMyAds");
+        return ResponseWrapperAdsDtoMapper.INSTANCE.toResponseWrapperAdsDto(adsRepository.findAllByAuthor(getAuthUser()));
+    }
+
+    private User getAuthUser() {
+        return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }
