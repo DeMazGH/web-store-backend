@@ -12,7 +12,7 @@ class AdsMapperTest {
 
     @Test
     void shouldMapAdsDtoToAds() {
-        Ads actual = AdsMapper.INSTANCE.adsDtoToAds(ADS_DTO_TEST);
+        Ads actual = AdsMapper.INSTANCE.adsDtoToAds(ADS_DTO_TEST_1);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getAuthor().getId()).isEqualTo(USER_TEST.getId());
