@@ -46,9 +46,13 @@ public class AdsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FullAdsDto> getInfoAboutAd(@PathVariable int id) {
+    public ResponseEntity<FullAdsDto> getInfoAboutAd(@PathVariable("id") int adId) {
         log.info("Was invoked method - getInfoAboutAd");
-        return ResponseEntity.ok(new FullAdsDto());
+        if (authValidator.userIsNotAuthorised()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } else {
+            return ResponseEntity.ok(adsService.getInfoAboutAd(adId));
+        }
     }
 
     @DeleteMapping("/{id}")

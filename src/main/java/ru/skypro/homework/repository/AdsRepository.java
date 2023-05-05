@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.skypro.homework.entity.Ads;
 
 public interface AdsRepository extends JpaRepository<Ads, Integer> {
+
+    Ads findById(int adId);
 }
