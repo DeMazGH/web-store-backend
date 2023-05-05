@@ -8,7 +8,7 @@ import ru.skypro.homework.entity.Ads;
 
 import java.util.List;
 
-@Mapper(uses = AdsDtoMapper.class)
+@Mapper(uses = AdsMapper.class)
 public interface ResponseWrapperAdsDtoMapper {
 
     ResponseWrapperAdsDtoMapper INSTANCE = Mappers.getMapper(ResponseWrapperAdsDtoMapper.class);

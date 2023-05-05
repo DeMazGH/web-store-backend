@@ -6,7 +6,7 @@ import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.entity.Ads;
 
 @Mapper(uses = UserMapper.class)
-public interface AdsDtoMapper {
+public interface AdsMapper {
 
     @Mapping(source = "pk", target = "id")
     @Mapping(source = "author", target = "author.id")
