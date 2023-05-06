@@ -20,9 +20,9 @@ import ru.skypro.homework.service.AuthValidator;
 @CrossOrigin(value = "http://localhost:3000")
 public class AdsController {
 
-    AdsService adsService;
-    AuthValidator authValidator;
-    AccessRightValidator accessRightValidator;
+    private final AdsService adsService;
+    private final AuthValidator authValidator;
+    private final AccessRightValidator accessRightValidator;
 
     public AdsController(AdsService adsService, AuthValidator authValidator, AccessRightValidator accessRightValidator) {
         this.adsService = adsService;
