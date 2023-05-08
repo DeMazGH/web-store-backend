@@ -6,8 +6,9 @@ import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateCommentDto;
 import ru.skypro.homework.entity.Comment;
+import ru.skypro.homework.mapper.util.*;
 
-@Mapper
+@Mapper(uses = DateMapper.class)
 public interface CommentMapper {
 
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
