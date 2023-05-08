@@ -15,9 +15,9 @@ import java.util.Objects;
 @Service
 public class AccessRightValidator {
 
-    UserRepository userRepository;
-    CommentRepository commentRepository;
-    AdsRepository adsRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+    private final AdsRepository adsRepository;
 
     public AccessRightValidator(UserRepository userRepository, CommentRepository commentRepository, AdsRepository adsRepository) {
         this.userRepository = userRepository;

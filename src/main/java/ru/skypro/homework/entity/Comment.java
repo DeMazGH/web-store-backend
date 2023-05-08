@@ -1,6 +1,7 @@
 package ru.skypro.homework.entity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -10,7 +11,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String text;
-    private long createdAt;
+    private LocalDateTime createdAt;
     @ManyToOne
     @JoinColumn(name = "ads_id")
     private Ads ads;
@@ -18,7 +19,7 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Comment(Integer id, String text, long createdAt, Ads ads, User user) {
+    public Comment(Integer id, String text, LocalDateTime createdAt, Ads ads, User user) {
         this.id = id;
         this.text = text;
         this.createdAt = createdAt;
@@ -45,12 +46,12 @@ public class Comment {
         this.text = text;
     }
 
-    public long getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(long createAt) {
-        this.createdAt = createAt;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Ads getAds() {
@@ -74,7 +75,7 @@ public class Comment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return createdAt == comment.createdAt && Objects.equals(id, comment.id) && Objects.equals(text, comment.text) && Objects.equals(ads, comment.ads) && Objects.equals(user, comment.user);
+        return Objects.equals(id, comment.id) && Objects.equals(text, comment.text) && Objects.equals(createdAt, comment.createdAt) && Objects.equals(ads, comment.ads) && Objects.equals(user, comment.user);
     }
 
     @Override
@@ -87,7 +88,7 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", createAt=" + createdAt +
+                ", createdAt=" + createdAt +
                 ", ads=" + ads +
                 ", user=" + user +
                 '}';
