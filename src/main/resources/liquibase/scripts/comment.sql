@@ -11,3 +11,7 @@ create table if not exists comment(
 
 -- changeset demaz:2
 alter table comment rename column create_at to created_at;
+
+-- changeset demaz:3
+alter table comment drop column created_at;
+alter table comment add column created_at timestamp;

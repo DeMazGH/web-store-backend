@@ -14,7 +14,6 @@ import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @Slf4j
 @Service
@@ -39,7 +38,7 @@ public class CommentService {
         log.info("Was invoked method - addCommentToAd");
 
         Comment newComment = CommentMapper.INSTANCE.createCommentDtoToComment(createdComment);
-        newComment.setCreatedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+        newComment.setCreatedAt(LocalDateTime.now());
         newComment.setAds(adsRepository.getReferenceById(adId));
         newComment.setUser(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()));
 
