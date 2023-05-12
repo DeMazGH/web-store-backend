@@ -15,6 +15,9 @@ import ru.skypro.homework.mapper.ResponseWrapperAdsDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.UserRepository;
 
+/**
+ * Сервис для работы с сущностью {@link Ads}.
+ */
 @Slf4j
 @Service
 public class AdsService {
@@ -30,7 +33,7 @@ public class AdsService {
 
     /**
      * Метод получает список всех объявлений из {@link AdsRepository}, конвертирует полученный список
-     * и отдает результат в виде DTO
+     * и отдает результат в виде DTO.
      * @return {@link ResponseWrapperAdsDto}
      */
     public ResponseWrapperAdsDto getAllAds() {
@@ -38,6 +41,14 @@ public class AdsService {
         return ResponseWrapperAdsDtoMapper.INSTANCE.toResponseWrapperAdsDto(adsRepository.findAll());
     }
 
+
+    /**
+     * Метод принимает необходимые данные для создания объявления в виде DTO и картинки, на их основе создает сущность
+     * {@link Ads} и сохраняет ее в БД. После сохранения возвращает актуальные данные о созданном объявлении в виде DTO.
+     * @param properties {@link CreateAdsDto}
+     * @param adImage {@link MultipartFile}
+     * @return {@link AdsDto}
+     */
     public AdsDto createAd(CreateAdsDto properties, MultipartFile adImage) {
         log.info("Was invoked method - createAd");
         Ads newAd = AdsMapper.INSTANCE.createAdsDtoToAds(properties);
@@ -47,27 +58,43 @@ public class AdsService {
         return AdsMapper.INSTANCE.adsToAdsDto(createdAd);
     }
 
+    /**
+     * Метод принимает id искомого объявления, ищет сущность {@link Ads} в БД,
+     * возвращает результат поиска в виде DTO или {@code null} в зависимости от результата поиска.
+     * @param adId идентификатор объявления
+     * @return {@link FullAdsDto} / {@code null}
+     */
     public FullAdsDto getInfoAboutAd(int adId) {
         log.info("Was invoked method - getInfoAboutAd");
         Ads ad = adsRepository.findById(adId);
-        // у нас же может из репозитория вместо сущности возвратиться null? нужно делать проверки на null?
-        //это вопрос про все сущности (user, ads, comment)
-        if (ad == null) {
-            return null;
-        } else {
-            return AdsMapper.INSTANCE.adToFullAdsDto(ad);
-        }
+        return (ad == null) ? null : AdsMapper.INSTANCE.adToFullAdsDto(ad);
     }
 
+    /**
+     * Метод принимает id объявления, по id удаляет сущность {@link Ads} из БД.
+     * @param adId идентификатор объявления
+     */
     public void deleteAd(int adId) {
         log.info("Was invoked method - deleteAd");
         adsRepository.deleteById(adId);
     }
 
+    /**
+     * Метод принимает id объявления и его актуальные данные, ищет сущность {@link Ads} в БД,
+     * если объявление не найдено - возвращает {@code null},
+     * если найдено - изменяет данные на актуальные и возвращает результат поиска в виде DTO.
+     * @param adId идентификатор объявления
+     * @param newAdData актуальные данные объявления
+     * @return {@link AdsDto} / {@code null}
+     */
     public AdsDto updateAd(int adId, CreateAdsDto newAdData) {
         log.info("Was invoked method - updateAd");
 
         Ads oldAdData = adsRepository.findById(adId);
+        if (oldAdData == null) {
+            return null;
+        }
+
         oldAdData.setDescription(newAdData.getDescription());
         oldAdData.setPrice(newAdData.getPrice());
         oldAdData.setTitle(newAdData.getTitle());
@@ -77,21 +104,42 @@ public class AdsService {
         return AdsMapper.INSTANCE.adsToAdsDto(updatedAd);
     }
 
+    /**
+     * Метод получает список объявлений авторизованного пользователя из {@link AdsRepository},
+     * конвертирует полученный список и отдает результат в виде DTO.
+     * @return {@link ResponseWrapperAdsDto}
+     */
     public ResponseWrapperAdsDto getMyAds() {
         log.info("Was invoked method - getMyAds");
         return ResponseWrapperAdsDtoMapper.INSTANCE.toResponseWrapperAdsDto(adsRepository.findAllByAuthor(getAuthUser()));
     }
 
+    /**
+     * Метод принимает id объявления и его новую картинку, ищет сущность {@link Ads} в БД,
+     * если объявление не найдено - возвращает {@code null},
+     * если найдено - изменяет картинку на новую и возвращает ссылку на картинку объявления.
+     * @param adId идентификатор объявления
+     * @param adImage новая картинка объявления
+     * @return ссылка на картинку объявления
+     */
     public String updateAdImage(int adId, MultipartFile adImage) {
         log.info("Was invoked method - updateAdImage");
 
         Ads oldAdData = adsRepository.findById(adId);
+        if (oldAdData == null) {
+            return null;
+        }
+
 //        oldAdData.setImage();   здесь будет метод изменения картинки объявления
 
         Ads updatedAd = adsRepository.save(oldAdData);
         return updatedAd.getImage();
     }
 
+    /**
+     * Метод возвращает авторизованного пользователя.
+     * @return авторизованный пользователь
+     */
     private User getAuthUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }
