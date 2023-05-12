@@ -11,6 +11,9 @@ import ru.skypro.homework.repository.UserRepository;
 
 import java.util.Objects;
 
+/**
+ * Сервис для проверки прав авторизованного пользователя.
+ */
 @Slf4j
 @Service
 public class AccessRightValidator {
@@ -25,6 +28,12 @@ public class AccessRightValidator {
         this.adsRepository = adsRepository;
     }
 
+    /**
+     * Метод проверяет есть ли у пользователя право доступа для изменения комментария.
+     *
+     * @param commentId идентификатор комментария
+     * @return {@code true} - если есть права, {@code false} - если прав нет
+     */
     public boolean userHaveAccessToComment(int commentId) {
         log.info("Was invoked method - userHaveAccessToComment");
 
@@ -44,6 +53,12 @@ public class AccessRightValidator {
         }
     }
 
+    /**
+     * Метод проверяет есть ли у пользователя право доступа для изменения объявления.
+     *
+     * @param adId идентификатор объявления
+     * @return {@code true} - если есть права, {@code false} - если прав нет
+     */
     public boolean userHaveAccessToAd(int adId) {
         log.info("Was invoked method - userHaveAccessToAd");
 
@@ -63,11 +78,22 @@ public class AccessRightValidator {
         }
     }
 
+    /**
+     * Метод возвращает авторизованного пользователя.
+     *
+     * @return авторизованный пользователь
+     */
     private User getAuthUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
+    /**
+     * Метод проверяет - является ли пользователь администратором.
+     *
+     * @param currentUser пользователь проходящий проверку
+     * @return {@code true} - если пользователь является администратором, {@code false} - если не является
+     */
     private boolean userIsAdmin(User currentUser) {
-            return currentUser.getRole() == Role.ADMIN;
+        return currentUser.getRole() == Role.ADMIN;
     }
 }
