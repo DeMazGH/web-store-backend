@@ -53,7 +53,8 @@ public class AdsController {
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
-            return ResponseEntity.ok(adsService.getInfoAboutAd(adId));
+            FullAdsDto desiredAd = adsService.getInfoAboutAd(adId);
+            return (desiredAd == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(desiredAd);
         }
     }
 
@@ -78,7 +79,8 @@ public class AdsController {
         } else if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
-            return ResponseEntity.ok(adsService.updateAd(adId, newAdData));
+            AdsDto updatedAd = adsService.updateAd(adId, newAdData);
+            return (updatedAd == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(updatedAd);
         }
     }
 

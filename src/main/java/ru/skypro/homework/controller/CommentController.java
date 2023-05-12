@@ -28,29 +28,28 @@ public class CommentController {
     }
 
     @GetMapping("{ad_pk}/comment")
-    public ResponseEntity<ResponseWrapperCommentDto> getAdComments(@PathVariable("ad_pk") int adPk) {
+    public ResponseEntity<ResponseWrapperCommentDto> getAdComments(@PathVariable("ad_pk") int adId) {
         log.info("Was invoked method - getAdComments");
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
-            return ResponseEntity.ok(commentService.getAdComments(adPk));
+            return ResponseEntity.ok(commentService.getAdComments(adId));
         }
     }
 
 
     @PostMapping("{ad_pk}/comment")
-    public ResponseEntity<CommentDto> addCommentToAd(@PathVariable("ad_pk") int adPk,
+    public ResponseEntity<CommentDto> addCommentToAd(@PathVariable("ad_pk") int adId,
                                                      @RequestBody CreateCommentDto createdComment) {
         log.info("Was invoked method - addAdsComment");
         if (authValidator.userIsNotAuthorised()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
-            return ResponseEntity.ok(commentService.addCommentToAd(adPk, createdComment));
+            return ResponseEntity.ok(commentService.addCommentToAd(adId, createdComment));
         }
     }
 
-    //Зачем нам здесь id объявления, если мы сразу можем удалить коммент по его id?
-    //Или нужно чтобы пользователь мог удалять чужие комменты в своих объявлениях?
+    //Если я не использую adId для формирования составного primary key, то можно игнорировать этот параметр?
     @DeleteMapping("{ad_pk}/comment/{id}")
     public ResponseEntity<Void> deleteAdsComment(@PathVariable("ad_pk") int adId,
                                                  @PathVariable("id") int commentId) {
@@ -65,7 +64,7 @@ public class CommentController {
         }
     }
 
-    //Зачем нам здесь id объявления, если мы сразу можем изменить коммент по его id?
+    //Если я не использую adId для формирования составного primary key, то можно игнорировать этот параметр?
     @PatchMapping("{ad_pk}/comment/{id}")
     public ResponseEntity<CommentDto> updateAdComment(@PathVariable("ad_pk") int adId,
                                                       @PathVariable("id") int commentId,
