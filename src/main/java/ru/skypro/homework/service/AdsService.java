@@ -28,6 +28,11 @@ public class AdsService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Метод получает список всех объявлений из {@link AdsRepository}, конвертирует полученный список
+     * и отдает результат в виде DTO
+     * @return {@link ResponseWrapperAdsDto}
+     */
     public ResponseWrapperAdsDto getAllAds() {
         log.info("Was invoked method - getAllAds");
         return ResponseWrapperAdsDtoMapper.INSTANCE.toResponseWrapperAdsDto(adsRepository.findAll());
