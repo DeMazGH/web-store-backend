@@ -68,4 +68,6 @@ public class UserController {
             return ResponseEntity.ok().build();
         }
     }
+
+    //Добавить Get-метод для получения аватара пользователя
 }

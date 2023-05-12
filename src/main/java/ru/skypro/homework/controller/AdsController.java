@@ -107,4 +107,6 @@ public class AdsController {
             return ResponseEntity.ok(adsService.updateAdImage(adId, adImage));
         }
     }
+
+    //Добавить Get-метод для получения картинки объявления
 }
