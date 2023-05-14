@@ -49,7 +49,6 @@ public class CommentController {
         }
     }
 
-    //Если я не использую adId для формирования составного primary key, то можно игнорировать этот параметр?
     @DeleteMapping("{ad_pk}/comment/{id}")
     public ResponseEntity<Void> deleteAdsComment(@PathVariable("ad_pk") int adId,
                                                  @PathVariable("id") int commentId) {
@@ -58,13 +57,14 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else if (!accessRightValidator.userHaveAccessToComment(commentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else if (!commentService.dataIsConsistent(adId, commentId)) {
+            return ResponseEntity.badRequest().build();
         } else {
             commentService.deleteAdsComment(commentId);
             return ResponseEntity.ok().build();
         }
     }
 
-    //Если я не использую adId для формирования составного primary key, то можно игнорировать этот параметр?
     @PatchMapping("{ad_pk}/comment/{id}")
     public ResponseEntity<CommentDto> updateAdComment(@PathVariable("ad_pk") int adId,
                                                       @PathVariable("id") int commentId,
@@ -74,6 +74,8 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else if (!accessRightValidator.userHaveAccessToComment(commentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else if (!commentService.dataIsConsistent(adId, commentId)) {
+            return ResponseEntity.badRequest().build();
         } else {
             return ResponseEntity.ok(commentService.updateAdComment(commentId, newData));
         }
