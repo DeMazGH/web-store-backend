@@ -8,7 +8,7 @@ import java.util.TimeZone;
 public class DateMapper {
 
     public long localDateTimeToLong(LocalDateTime localDateTime) {
-        return localDateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+        return localDateTime.toInstant(ZoneOffset.systemDefault().getRules().getOffset(localDateTime)).toEpochMilli();
     }
 
     public LocalDateTime longToLocalDateTime(long longNum) {
