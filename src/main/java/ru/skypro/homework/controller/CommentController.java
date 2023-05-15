@@ -27,7 +27,7 @@ public class CommentController {
         this.accessRightValidator = accessRightValidator;
     }
 
-    @GetMapping("{ad_pk}/comment")
+    @GetMapping("{ad_pk}/comments")
     public ResponseEntity<ResponseWrapperCommentDto> getAdComments(@PathVariable("ad_pk") int adId) {
         log.info("Was invoked method - getAdComments");
         if (authValidator.userIsNotAuthorised()) {
@@ -38,7 +38,7 @@ public class CommentController {
     }
 
 
-    @PostMapping("{ad_pk}/comment")
+    @PostMapping("{ad_pk}/comments")
     public ResponseEntity<CommentDto> addCommentToAd(@PathVariable("ad_pk") int adId,
                                                      @RequestBody CreateCommentDto createdComment) {
         log.info("Was invoked method - addAdsComment");
@@ -49,7 +49,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("{ad_pk}/comment/{id}")
+    @DeleteMapping("{ad_pk}/comments/{id}")
     public ResponseEntity<Void> deleteAdsComment(@PathVariable("ad_pk") int adId,
                                                  @PathVariable("id") int commentId) {
         log.info("Was invoked method - deleteAdsComment");
@@ -65,7 +65,7 @@ public class CommentController {
         }
     }
 
-    @PatchMapping("{ad_pk}/comment/{id}")
+    @PatchMapping("{ad_pk}/comments/{id}")
     public ResponseEntity<CommentDto> updateAdComment(@PathVariable("ad_pk") int adId,
                                                       @PathVariable("id") int commentId,
                                                       @RequestBody CommentDto newData) {
