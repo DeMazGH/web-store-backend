@@ -98,4 +98,14 @@ public class CommentService {
 
         return CommentMapper.INSTANCE.commentToCommentDto(updatedComment);
     }
+
+    /**
+     * Метод по id проверяет принадлежность комментария к объявлению.
+     * @param adId идентификатор объявления
+     * @param commentId идентификатор комментария
+     * @return {@link true} - комментарий соответствует объявлению, {@link false} - не соответствует
+     */
+    public boolean dataIsConsistent(int adId, int commentId) {
+        return adId == commentRepository.findById(commentId).getAds().getId();
+    }
 }

@@ -12,7 +12,6 @@ import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 import ru.skypro.homework.service.AccessRightValidator;
 import ru.skypro.homework.service.AdsService;
-import ru.skypro.homework.service.AuthValidator;
 
 @Slf4j
 @RestController
@@ -21,12 +20,10 @@ import ru.skypro.homework.service.AuthValidator;
 public class AdsController {
 
     private final AdsService adsService;
-    private final AuthValidator authValidator;
     private final AccessRightValidator accessRightValidator;
 
-    public AdsController(AdsService adsService, AuthValidator authValidator, AccessRightValidator accessRightValidator) {
+    public AdsController(AdsService adsService, AccessRightValidator accessRightValidator) {
         this.adsService = adsService;
-        this.authValidator = authValidator;
         this.accessRightValidator = accessRightValidator;
     }
 
@@ -40,30 +37,20 @@ public class AdsController {
     public ResponseEntity<AdsDto> createAd(@RequestPart("properties") CreateAdsDto properties,
                                            @RequestPart("image") MultipartFile adImage) {
         log.info("Was invoked method - createAd");
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else {
-            return ResponseEntity.ok(adsService.createAd(properties, adImage));
-        }
+        return ResponseEntity.ok(adsService.createAd(properties, adImage));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FullAdsDto> getInfoAboutAd(@PathVariable("id") int adId) {
         log.info("Was invoked method - getInfoAboutAd");
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else {
-            FullAdsDto desiredAd = adsService.getInfoAboutAd(adId);
-            return (desiredAd == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(desiredAd);
-        }
+        FullAdsDto desiredAd = adsService.getInfoAboutAd(adId);
+        return (desiredAd == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(desiredAd);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAd(@PathVariable("id") int adId) {
         log.info("Was invoked method - deleteAd");
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (!accessRightValidator.userHaveAccessToAd(adId)) {
+        if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             adsService.deleteAd(adId);
@@ -74,9 +61,7 @@ public class AdsController {
     @PatchMapping("/{id}")
     public ResponseEntity<AdsDto> updateAd(@PathVariable("id") int adId, @RequestBody CreateAdsDto newAdData) {
         log.info("Was invoked method - updateAd");
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (!accessRightValidator.userHaveAccessToAd(adId)) {
+        if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             AdsDto updatedAd = adsService.updateAd(adId, newAdData);
@@ -87,21 +72,14 @@ public class AdsController {
     @GetMapping("/me")
     public ResponseEntity<ResponseWrapperAdsDto> getMyAds() {
         log.info("Was invoked method - getMyAds");
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else {
-            return ResponseEntity.ok(adsService.getMyAds());
-        }
+        return ResponseEntity.ok(adsService.getMyAds());
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> updateAdImage(@PathVariable("id") int adId,
                                                 @RequestPart("image") MultipartFile adImage) {
         log.info("Was invoked method - updateAdImage");
-
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (!accessRightValidator.userHaveAccessToAd(adId)) {
+        if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             return ResponseEntity.ok(adsService.updateAdImage(adId, adImage));
