@@ -4,6 +4,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,21 +39,14 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
+        http
+                .csrf().disable()
                 .authorizeHttpRequests(
-                        (authorization) ->
-                                authorization
-                                        .mvcMatchers(AUTH_WHITELIST)
-                                        .permitAll()
-                                        .anyRequest()
-                                        .permitAll()
+                        (authorization) -> authorization
+                                .mvcMatchers(AUTH_WHITELIST).permitAll()
+                                .mvcMatchers(HttpMethod.GET, "/ads").permitAll()
+                                .mvcMatchers("/ads/**", "/users/**").authenticated()
                 )
-
-//                    .mvcMatchers("/ads/**", "/users/**")
-//                    .authenticated()
-//                    )
-
                 .cors()
                 .and()
                 .httpBasic(withDefaults());
