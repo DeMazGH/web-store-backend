@@ -4,13 +4,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.repository.UserRepository;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -88,8 +92,52 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUser() {
+    public void testUpdateUser() {
+        User currentUser = new User();
+        currentUser.setFirstName("John");
+        currentUser.setLastName("Doe");
+        currentUser.setPhone("123456789");
+
+        when(userRepository.save(currentUser)).thenReturn(currentUser);
+        when(userRepository.findByEmail(anyString())).thenReturn(currentUser);
+
+        UserDto updatedUserDto = new UserDto();
+        updatedUserDto.setFirstName("Jane");
+        updatedUserDto.setLastName("Smith");
+        updatedUserDto.setPhone("987654321");
+
+        UserDto result = userService.updateUser(updatedUserDto);
+
+        assertEquals("Jane", result.getFirstName());
+        assertEquals("Smith", result.getLastName());
+        assertEquals("987654321", result.getPhone());
     }
+
+    @Test
+    public void testUpdateImage() throws IOException {
+        String fakeImageDir = "/fake/image/directory/";
+        String email = "test@example.com";
+
+        User currentUser = new User();
+        currentUser.setEmail(email);
+        when(userRepository.findByEmail(email)).thenReturn(currentUser);
+
+        userService.setImageDir(fakeImageDir);
+
+        MultipartFile image = new MockMultipartFile(
+                "test.jpg",
+                "test.jpg",
+                "image/jpeg",
+                "test image data".getBytes()
+        );
+
+        userService.updateImage(image);
+
+        String expectedImagePath = fakeImageDir + email + ".jpg";
+        String actualImagePath = currentUser.getImage().replace("\\", "/");
+        assertEquals(expectedImagePath, actualImagePath);
+    }
+
 
     @Test
     void updateImage() {
