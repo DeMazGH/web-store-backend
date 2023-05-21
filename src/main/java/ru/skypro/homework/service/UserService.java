@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.constant.Constant;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
@@ -25,8 +26,8 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 @Service
 public class UserService {
 
-    @Value("${images.dir.path}")
-    private String imageDir;
+    @Value("${user.avatar.dir.path}")
+    private String avatarDir;
 
     private final UserRepository userRepository;
 
@@ -61,7 +62,7 @@ public class UserService {
     public UserDto getMe() {
         log.info("Was invoked method - getMe");
         User currentUser = getAuthUser();
-        return UserMapper.INSTANCE.userToUserDto(currentUser);
+        return UserMapper.INSTANCE.userToUserDto(currentUser, Constant.AVATAR_API);
     }
 
     /**
@@ -80,7 +81,7 @@ public class UserService {
 
         User newUserData =  userRepository.save(oldUserData);
 
-        return UserMapper.INSTANCE.userToUserDto(newUserData);
+        return UserMapper.INSTANCE.userToUserDto(newUserData, Constant.AVATAR_API);
     }
 
     /**
@@ -95,7 +96,7 @@ public class UserService {
 
         User currentUser = getAuthUser();
 
-        Path filePath = Path.of(imageDir, currentUser.getEmail() + "."
+        Path filePath = Path.of(avatarDir, currentUser.getEmail() + "."
                 + getExtensions(Objects.requireNonNull(image.getOriginalFilename())));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
@@ -103,14 +104,24 @@ public class UserService {
         try (
                 InputStream is = image.getInputStream();
                 OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-                BufferedInputStream bis = new BufferedInputStream(is, 1024);
-                BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+                BufferedInputStream bis = new BufferedInputStream(is, 4096);
+                BufferedOutputStream bos = new BufferedOutputStream(os, 4096)
         ) {
             bis.transferTo(bos);
         }
 
         currentUser.setImage(filePath.toString());
         userRepository.save(currentUser);
+    }
+
+    public Path getAvatarPath() {
+        log.info("Was invoked method - getAvatar");
+
+        String avatarDir = getAuthUser().getImage();
+        if (null == avatarDir) {
+            throw new RuntimeException("Avatar not found");
+        }
+        return Path.of(avatarDir);
     }
 
     /**
