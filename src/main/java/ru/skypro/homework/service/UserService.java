@@ -130,4 +130,8 @@ public class UserService {
     private User getAuthUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }
+
+    public void setImageDir(String fakeImageDir) {
+        this.imageDir = fakeImageDir;
+    }
 }
