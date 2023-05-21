@@ -1,4 +1,4 @@
-package ru.skypro.homework;
+package ru.skypro.homework.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
