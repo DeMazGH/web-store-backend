@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.Image;
+import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.ImageRepository;
 
 import java.io.*;
@@ -22,6 +23,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 public class ImageService {
 
     private final ImageRepository imageRepository;
+    private final AdsRepository adsRepository;
 
     @Value("${ads.image.dir.path}")
     private String imageDir;
@@ -43,7 +45,7 @@ public class ImageService {
             bis.transferTo(bos);
         }
 
-        Image image = new Image();
+        Image image = imageRepository.findImageByAd(ad).orElse(new Image());
         image.setFilePath(filePath.toString());
         image.setAd(ad);
 
@@ -52,8 +54,8 @@ public class ImageService {
 
     public Path getImagePath(int adId) {
         log.info("Was invoked method - getImagePath");
-
-        Image image = imageRepository.findImageByAdId(adId);
+        Ads ads = adsRepository.findById(adId);
+        Image image = imageRepository.findImageByAdId(ads.getId());
 
         if (null == image) {
             throw new RuntimeException("Image doesn't exist");

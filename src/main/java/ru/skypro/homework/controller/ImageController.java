@@ -3,10 +3,7 @@ package ru.skypro.homework.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.service.ImageService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +16,7 @@ import java.nio.file.Files;
 @RestController
 @RequestMapping("/images")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class ImageController {
 
     private final ImageService imageService;

@@ -10,6 +10,7 @@ import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 import ru.skypro.homework.entity.Ads;
+import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mapper.AdsMapper;
 import ru.skypro.homework.mapper.ResponseWrapperAdsDtoMapper;
@@ -54,7 +55,9 @@ public class AdsService {
         Ads newAd = AdsMapper.INSTANCE.createAdsDtoToAds(properties);
         newAd.setAuthor(getAuthUser());
         Ads createdAd = adsRepository.save(newAd);
-        createdAd.setImage(imageService.saveImageAsFile(createdAd, adImage));
+        Image image = imageService.saveImageAsFile(createdAd, adImage);
+        createdAd.setImage(image);
+        adsRepository.save(createdAd);
         return AdsMapper.INSTANCE.adsToAdsDto(createdAd);
     }
 
