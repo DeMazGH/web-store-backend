@@ -17,3 +17,7 @@ alter table ads rename column pk to id;
 
 -- changeset demaz:3
 alter table ads add column image varchar;
+
+-- changeset demaz:4
+alter table ads drop column image;
+alter table ads add column image_id int;
