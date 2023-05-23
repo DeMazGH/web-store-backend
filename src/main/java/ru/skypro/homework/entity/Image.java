@@ -20,7 +20,7 @@ public class Image {
     @JoinColumn(name = "ad_id")
     private Ads ad;
 
-    public String getImagePath() {
+    public String getImageApi() {
         return "/image/" + this.ad.getId();
     }
 }

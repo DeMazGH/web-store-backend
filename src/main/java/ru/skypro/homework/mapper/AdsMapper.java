@@ -7,6 +7,7 @@ import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.entity.Ads;
+import ru.skypro.homework.entity.Image;
 
 @Mapper(uses = UserMapper.class)
 public interface AdsMapper {
@@ -15,21 +16,22 @@ public interface AdsMapper {
 
     @Mapping(source = "pk", target = "id")
     @Mapping(source = "author", target = "author.id")
+    @Mapping(source = "image", target = "image.filePath")
     Ads adsDtoToAds(AdsDto adsDto);
 
-    //здесь будет маппинг для image: в БД хранится путь к картинке в файловой системе,
-    // а отдавать надо эндпоинт, по которому можно получить будет байты картинки
     @Mapping(source = "id", target = "pk")
     @Mapping(source = "author.id", target = "author")
     AdsDto adsToAdsDto(Ads ad);
 
     Ads createAdsDtoToAds(CreateAdsDto createAdsDto);
 
-    //здесь будет маппинг для image: в БД хранится путь к картинке в файловой системе,
-    // а отдавать надо эндпоинт, по которому можно получить будет байты картинки
-    @Mapping(target = "authorFirstName", source = "ad.author.firstName")
-    @Mapping(target = "authorLastName", source = "ad.author.lastName")
-    @Mapping(target = "email", source = "ad.author.email")
-    @Mapping(target = "phone", source = "ad.author.phone")
+    @Mapping(source = "author.firstName", target = "authorFirstName")
+    @Mapping(source = "author.lastName", target = "authorLastName")
+    @Mapping(source = "author.email", target = "email")
+    @Mapping(source = "author.phone", target = "phone")
     FullAdsDto adToFullAdsDto(Ads ad);
+
+    default String getImageApi(Image image) {
+        return image.getImageApi();
+    }
 }
