@@ -115,11 +115,11 @@ public class UserService {
     }
 
     public Path getAvatarPath() {
-        log.info("Was invoked method - getAvatar");
+        log.info("Was invoked method - getAvatarPath");
 
         String avatarDir = getAuthUser().getImage();
         if (null == avatarDir) {
-            throw new RuntimeException("Avatar not found");
+            throw new RuntimeException("Avatar doesn't exist");
         }
         return Path.of(avatarDir);
     }
