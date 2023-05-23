@@ -13,6 +13,8 @@ import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 import ru.skypro.homework.service.AccessRightValidator;
 import ru.skypro.homework.service.AdsService;
 
+import java.io.IOException;
+
 @Slf4j
 @RestController
 @RequestMapping("/ads")
@@ -35,7 +37,7 @@ public class AdsController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdsDto> createAd(@RequestPart("properties") CreateAdsDto properties,
-                                           @RequestPart("image") MultipartFile adImage) {
+                                           @RequestPart("image") MultipartFile adImage) throws IOException {
         log.info("Was invoked method - createAd");
         return ResponseEntity.ok(adsService.createAd(properties, adImage));
     }
@@ -77,7 +79,7 @@ public class AdsController {
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> updateAdImage(@PathVariable("id") int adId,
-                                                @RequestPart("image") MultipartFile adImage) {
+                                                @RequestPart("image") MultipartFile adImage) throws IOException {
         log.info("Was invoked method - updateAdImage");
         if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -85,6 +87,4 @@ public class AdsController {
             return ResponseEntity.ok(adsService.updateAdImage(adId, adImage));
         }
     }
-
-    //Добавить Get-метод для получения картинки объявления
 }
