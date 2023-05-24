@@ -12,7 +12,12 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    UserDto userToUserDto(User user);
+    default UserDto userToUserDto(User user) {
+        return userToUserDto(user, user.getAvatar().getAvatarApi());
+    }
+
+    @Mapping(source = "avatarApi", target = "image")
+    UserDto userToUserDto(User user, String avatarApi);
 
     User userDtoToUser(UserDto userDto);
 
@@ -21,5 +26,4 @@ public interface UserMapper {
 
     @Mapping(source = "username", target = "email")
     User registerReqToUser(RegisterReq registerReq);
-
 }

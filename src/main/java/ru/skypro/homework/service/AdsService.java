@@ -1,5 +1,6 @@
 package ru.skypro.homework.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -9,31 +10,31 @@ import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 import ru.skypro.homework.entity.Ads;
+import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mapper.AdsMapper;
 import ru.skypro.homework.mapper.ResponseWrapperAdsDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.UserRepository;
 
+import java.io.IOException;
+
 /**
  * Сервис для работы с сущностью {@link Ads}.
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AdsService {
 
-    AdsRepository adsRepository;
-
-    UserRepository userRepository;
-
-    public AdsService(AdsRepository adsRepository, UserRepository userRepository) {
-        this.adsRepository = adsRepository;
-        this.userRepository = userRepository;
-    }
+    private final AdsRepository adsRepository;
+    private final UserRepository userRepository;
+    private final ImageService imageService;
 
     /**
      * Метод получает список всех объявлений из {@link AdsRepository}, конвертирует полученный список
      * и отдает результат в виде DTO.
+     *
      * @return {@link ResponseWrapperAdsDto}
      */
     public ResponseWrapperAdsDto getAllAds() {
@@ -41,26 +42,29 @@ public class AdsService {
         return ResponseWrapperAdsDtoMapper.INSTANCE.toResponseWrapperAdsDto(adsRepository.findAll());
     }
 
-
     /**
      * Метод принимает необходимые данные для создания объявления, в виде DTO и картинки, на их основе создает сущность
      * {@link Ads} и сохраняет ее в БД. После сохранения возвращает актуальные данные о созданном объявлении в виде DTO.
+     *
      * @param properties {@link CreateAdsDto}
-     * @param adImage {@link MultipartFile}
+     * @param adImage    {@link MultipartFile}
      * @return {@link AdsDto}
      */
-    public AdsDto createAd(CreateAdsDto properties, MultipartFile adImage) {
+    public AdsDto createAd(CreateAdsDto properties, MultipartFile adImage) throws IOException {
         log.info("Was invoked method - createAd");
         Ads newAd = AdsMapper.INSTANCE.createAdsDtoToAds(properties);
         newAd.setAuthor(getAuthUser());
-        //Здесь будет метод для получения картинки объявления
         Ads createdAd = adsRepository.save(newAd);
+        Image image = imageService.saveImageAsFile(createdAd, adImage);
+        createdAd.setImage(image);
+        adsRepository.save(createdAd);
         return AdsMapper.INSTANCE.adsToAdsDto(createdAd);
     }
 
     /**
      * Метод принимает id искомого объявления, ищет сущность {@link Ads} в БД,
      * возвращает результат поиска в виде DTO или {@code null} в зависимости от результата поиска.
+     *
      * @param adId идентификатор объявления
      * @return {@link FullAdsDto} / {@code null}
      */
@@ -72,6 +76,7 @@ public class AdsService {
 
     /**
      * Метод принимает id объявления, по id удаляет сущность {@link Ads} из БД.
+     *
      * @param adId идентификатор объявления
      */
     public void deleteAd(int adId) {
@@ -83,7 +88,8 @@ public class AdsService {
      * Метод принимает id объявления и его актуальные данные, ищет сущность {@link Ads} в БД,
      * если объявление не найдено - возвращает {@code null},
      * если найдено - изменяет данные на актуальные и возвращает новые данные объявления в виде DTO.
-     * @param adId идентификатор объявления
+     *
+     * @param adId      идентификатор объявления
      * @param newAdData актуальные данные объявления
      * @return {@link AdsDto} / {@code null}
      */
@@ -107,6 +113,7 @@ public class AdsService {
     /**
      * Метод получает список объявлений авторизованного пользователя из {@link AdsRepository},
      * конвертирует полученный список и отдает результат в виде DTO.
+     *
      * @return {@link ResponseWrapperAdsDto}
      */
     public ResponseWrapperAdsDto getMyAds() {
@@ -118,26 +125,27 @@ public class AdsService {
      * Метод принимает id объявления и его новую картинку, ищет сущность {@link Ads} в БД,
      * если объявление не найдено - возвращает {@code null},
      * если найдено - изменяет картинку на новую и возвращает ссылку на картинку объявления.
-     * @param adId идентификатор объявления
+     *
+     * @param adId    идентификатор объявления
      * @param adImage новая картинка объявления
      * @return ссылка на картинку объявления
      */
-    public String updateAdImage(int adId, MultipartFile adImage) {
+    public String updateAdImage(int adId, MultipartFile adImage) throws IOException {
         log.info("Was invoked method - updateAdImage");
 
         Ads oldAdData = adsRepository.findById(adId);
         if (oldAdData == null) {
-            return null;
+            throw new RuntimeException("Ad don't exist");
         }
 
-//        oldAdData.setImage();   здесь будет метод изменения картинки объявления
-
+        oldAdData.setImage(imageService.saveImageAsFile(oldAdData, adImage));
         Ads updatedAd = adsRepository.save(oldAdData);
-        return updatedAd.getImage();
+        return updatedAd.getImage().getImageApi();
     }
 
     /**
      * Метод возвращает авторизованного пользователя.
+     *
      * @return авторизованный пользователь
      */
     private User getAuthUser() {
