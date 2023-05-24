@@ -16,9 +16,11 @@ public class Comment {
     private Integer id;
     private String text;
     private LocalDateTime createdAt;
+
     @ManyToOne
     @JoinColumn(name = "ads_id")
     private Ads ads;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

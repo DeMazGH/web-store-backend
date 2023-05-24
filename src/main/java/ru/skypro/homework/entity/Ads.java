@@ -4,38 +4,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
+
+import static javax.persistence.CascadeType.ALL;
 
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "ads")
 public class Ads {
-    /**
-     * id объявления
-     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    /**
-     * цена объявления
-     */
     private Integer price;
-    /**
-     * описание объявления
-     */
     private String description;
-    /**
-     * заголовок объявления
-     */
     private String title;
-    /**
-     * id автора объявления
-     */
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User author;
 
-    @OneToOne
+    @OneToOne(cascade = ALL)
     @JoinColumn(name = "image_id")
     private Image image;
+
+    @OneToMany(mappedBy = "ads", cascade = ALL)
+    private List<Comment> comments;
 }
