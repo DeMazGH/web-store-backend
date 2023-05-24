@@ -35,4 +35,19 @@ public class ImageController {
             is.transferTo(os);
         }
     }
+
+    @GetMapping(value = "/avatar/{userId}", produces = {
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.IMAGE_PNG_VALUE,
+            MediaType.IMAGE_GIF_VALUE,
+            MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public void getAvatar(@PathVariable int userId,
+                          HttpServletResponse response) throws IOException {
+        log.info("Was invoked method - getAvatar");
+        try (InputStream is = Files.newInputStream(imageService.getAvatarPath(userId));
+             OutputStream os = response.getOutputStream()) {
+            response.setStatus(200);
+            is.transferTo(os);
+        }
+    }
 }

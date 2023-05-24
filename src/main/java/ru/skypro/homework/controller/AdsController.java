@@ -61,7 +61,8 @@ public class AdsController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AdsDto> updateAd(@PathVariable("id") int adId, @RequestBody CreateAdsDto newAdData) {
+    public ResponseEntity<AdsDto> updateAd(@PathVariable("id") int adId,
+                                           @RequestBody CreateAdsDto newAdData) {
         log.info("Was invoked method - updateAd");
         if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

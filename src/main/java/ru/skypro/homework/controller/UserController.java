@@ -10,11 +10,7 @@ import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.service.UserService;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 
 @Slf4j
 @RestController
@@ -50,23 +46,10 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userDto));
     }
 
-    @PatchMapping("/me/image")
-    public ResponseEntity<?> updateImage(@RequestBody MultipartFile image) throws IOException {
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateImage(@RequestPart MultipartFile image) throws IOException {
         log.info("Was invoked method - updateImage");
         userService.updateImage(image);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(value = "/avatar", produces = {
-            MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_PNG_VALUE,
-            MediaType.IMAGE_GIF_VALUE,
-            MediaType.APPLICATION_OCTET_STREAM_VALUE})
-    public void getAvatar(HttpServletResponse response) throws IOException {
-        try(InputStream is = Files.newInputStream(userService.getAvatarPath());
-            OutputStream os = response.getOutputStream()) {
-            response.setStatus(200);
-            is.transferTo(os);
-        }
     }
 }

@@ -2,24 +2,27 @@ package ru.skypro.homework.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
+@Slf4j
 @Entity
 @Data
 @NoArgsConstructor
-public class Comment {
+public class Avatar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String text;
-    private LocalDateTime createdAt;
-    @ManyToOne
-    @JoinColumn(name = "ads_id")
-    private Ads ads;
-    @ManyToOne
+
+    private String filePath;
+
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public String getAvatarApi() {
+        return "/images/avatar/" + user.getId();
+    }
 }
