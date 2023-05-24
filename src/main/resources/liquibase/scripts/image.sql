@@ -6,3 +6,6 @@ create table if not exists image(
     file_path   text not null,
     ad_id       int not null
 );
+
+-- changeset demaz:2
+alter table image alter column ad_id drop not null;
