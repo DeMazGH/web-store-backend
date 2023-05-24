@@ -36,8 +36,8 @@ public class UserService {
 
     /**
      * Метод принимает данные в виде DTO о текущем и новом паролях,
-     * производит проверки: авторизации, совпадения текущего пароля с переданным в DTO.
-     * Если все проверки пройдены успешно, то меняет пароль на новый и сохраняет изменения в БД.
+     * производит проверку совпадения текущего пароля с переданным в DTO.
+     * Если все проверка пройдена успешно, то меняет пароль на новый и сохраняет изменения в БД.
      * Возвращает булево значение соответствующее успешности изменения пароля.
      * @param newPasswordDto данные о текущем и новом паролях
      * @return {@code true} - пароль успешно изменен, {@code true} - отказано в доступе
@@ -45,10 +45,7 @@ public class UserService {
     public boolean setPassword(NewPasswordDto newPasswordDto) {
         log.info("Was invoked method - setPassword");
         User currentUser = getAuthUser();
-        //нужна ли, здесь и ниже, проверка на null после получения авторизованного пользователя из БД?
-        if (currentUser == null) {
-            return false;
-        } else if (!currentUser.getPassword().equals(newPasswordDto.getCurrentPassword())) {
+        if (!currentUser.getPassword().equals(newPasswordDto.getCurrentPassword())) {
             return false;
         } else {
             currentUser.setPassword(newPasswordDto.getNewPassword());
@@ -58,48 +55,37 @@ public class UserService {
     }
 
     /**
-     * Метод проверяет наличие пользователя в БД.
-     * Если пользователь не найдено - возвращает {@code null}, если найден возвращает данные о пользователе.
-     * @return {@link UserDto} / {@code null}
+     * Метод возвращает данные об авторизованном пользователе.
+     * @return {@link UserDto}
      */
     public UserDto getMe() {
         log.info("Was invoked method - getMe");
         User currentUser = getAuthUser();
-        return (currentUser == null) ? null : UserMapper.INSTANCE.userToUserDto(currentUser);
+        return UserMapper.INSTANCE.userToUserDto(currentUser);
     }
 
     /**
-     * Метод принимает новые данные пользователя, далее получает авторизованного пользователя из БД.
-     * Если пользователь не найден - возвращает {@code null},
-     * если найден - изменяет данные на актуальные и возвращает новые данные пользователя в виде DTO.
+     * Метод принимает новые данные пользователя, далее получает авторизованного пользователя из БД,
+     * изменяет данные на актуальные и возвращает новые данные пользователя в виде DTO.
      * @param userDto новые данные пользователя
-     * @return {@link UserDto} / {@code null}
+     * @return {@link UserDto}
      */
     public UserDto updateUser(UserDto userDto) {
         log.info("Was invoked method - updateUser");
         User oldUserData = getAuthUser();
-        if (oldUserData == null) {
-            return null;
-        }
 
         oldUserData.setFirstName(userDto.getFirstName());
         oldUserData.setLastName(userDto.getLastName());
         oldUserData.setPhone(userDto.getPhone());
-        //Здесь нужно менять поля email? image?
-        //для смены image у нас есть отдельный метод
-        //я так думаю для смены логина(email) тоже лучше сделать отдельный метод
-
-        //id переданный в DTO игнорируем?
-        // или нужно сравнить с авторизованным пользователем и если не совпадает прервать выполнение метода?
 
         User newUserData =  userRepository.save(oldUserData);
+
         return UserMapper.INSTANCE.userToUserDto(newUserData);
     }
 
     /**
-     * Метод принимает картинку, далее получает авторизованного пользователя из БД.
-     * Если пользователь не найден - возвращает {@code null},
-     * если найден - создает путь файла для картинки, директорию, удаляет старую картинку, создает файл
+     * Метод принимает картинку, далее получает авторизованного пользователя из БД,
+     * создает путь файла для картинки, директорию, удаляет старую картинку, создает файл
      * и копирует картинку, устанавливает значение пути картинки у текущего пользователя и сохраняет изменения в БД.
      * @param image аватар пользователя
      * *@throws IOException
@@ -108,10 +94,6 @@ public class UserService {
         log.info("Was invoked method - updateImage");
 
         User currentUser = getAuthUser();
-        if (currentUser == null) {
-            log.error("User not found");
-            return;
-        }
 
         Path filePath = Path.of(imageDir, currentUser.getEmail() + "."
                 + getExtensions(Objects.requireNonNull(image.getOriginalFilename())));
@@ -147,5 +129,9 @@ public class UserService {
      */
     private User getAuthUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+
+    public void setImageDir(String fakeImageDir) {
+        this.imageDir = fakeImageDir;
     }
 }

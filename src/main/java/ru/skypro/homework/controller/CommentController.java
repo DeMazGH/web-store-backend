@@ -8,7 +8,6 @@ import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateCommentDto;
 import ru.skypro.homework.dto.ResponseWrapperCommentDto;
 import ru.skypro.homework.service.AccessRightValidator;
-import ru.skypro.homework.service.AuthValidator;
 import ru.skypro.homework.service.CommentService;
 
 @Slf4j
@@ -18,62 +17,50 @@ import ru.skypro.homework.service.CommentService;
 public class CommentController {
 
     private final CommentService commentService;
-    private final AuthValidator authValidator;
     private final AccessRightValidator accessRightValidator;
 
-    public CommentController(CommentService commentService, AuthValidator authValidator, AccessRightValidator accessRightValidator) {
+    public CommentController(CommentService commentService, AccessRightValidator accessRightValidator) {
         this.commentService = commentService;
-        this.authValidator = authValidator;
         this.accessRightValidator = accessRightValidator;
     }
 
-    @GetMapping("{ad_pk}/comment")
+    @GetMapping("{ad_pk}/comments")
     public ResponseEntity<ResponseWrapperCommentDto> getAdComments(@PathVariable("ad_pk") int adId) {
         log.info("Was invoked method - getAdComments");
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else {
-            return ResponseEntity.ok(commentService.getAdComments(adId));
-        }
+        return ResponseEntity.ok(commentService.getAdComments(adId));
     }
 
 
-    @PostMapping("{ad_pk}/comment")
+    @PostMapping("{ad_pk}/comments")
     public ResponseEntity<CommentDto> addCommentToAd(@PathVariable("ad_pk") int adId,
                                                      @RequestBody CreateCommentDto createdComment) {
         log.info("Was invoked method - addAdsComment");
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else {
-            return ResponseEntity.ok(commentService.addCommentToAd(adId, createdComment));
-        }
+        return ResponseEntity.ok(commentService.addCommentToAd(adId, createdComment));
     }
 
-    //Если я не использую adId для формирования составного primary key, то можно игнорировать этот параметр?
-    @DeleteMapping("{ad_pk}/comment/{id}")
+    @DeleteMapping("{ad_pk}/comments/{id}")
     public ResponseEntity<Void> deleteAdsComment(@PathVariable("ad_pk") int adId,
                                                  @PathVariable("id") int commentId) {
         log.info("Was invoked method - deleteAdsComment");
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (!accessRightValidator.userHaveAccessToComment(commentId)) {
+        if (!accessRightValidator.userHaveAccessToComment(commentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else if (!commentService.dataIsConsistent(adId, commentId)) {
+            return ResponseEntity.badRequest().build();
         } else {
             commentService.deleteAdsComment(commentId);
             return ResponseEntity.ok().build();
         }
     }
 
-    //Если я не использую adId для формирования составного primary key, то можно игнорировать этот параметр?
-    @PatchMapping("{ad_pk}/comment/{id}")
+    @PatchMapping("{ad_pk}/comments/{id}")
     public ResponseEntity<CommentDto> updateAdComment(@PathVariable("ad_pk") int adId,
                                                       @PathVariable("id") int commentId,
                                                       @RequestBody CommentDto newData) {
         log.info("Was invoked method - updateAdComment");
-        if (authValidator.userIsNotAuthorised()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } else if (!accessRightValidator.userHaveAccessToComment(commentId)) {
+        if (!accessRightValidator.userHaveAccessToComment(commentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } else if (!commentService.dataIsConsistent(adId, commentId)) {
+            return ResponseEntity.badRequest().build();
         } else {
             return ResponseEntity.ok(commentService.updateAdComment(commentId, newData));
         }
