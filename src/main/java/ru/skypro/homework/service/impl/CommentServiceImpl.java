@@ -108,6 +108,13 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public boolean dataIsConsistent(int adId, int commentId) {
-        return adId == commentRepository.findById(commentId).getAds().getId();
+        if (null == adsRepository.findById(adId)) {
+            return false;
+        }
+        Comment comment = commentRepository.findById(commentId);
+        if (null == comment) {
+            return false;
+        }
+        return adId == comment.getAds().getId();
     }
 }

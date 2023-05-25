@@ -5,7 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.entity.Ads;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.User;
+import ru.skypro.homework.exception.AdNotFoundException;
+import ru.skypro.homework.exception.CommentNotFoundException;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
@@ -30,21 +34,27 @@ public class AccessRightValidatorImpl implements AccessRightValidator {
      *
      * @param commentId идентификатор комментария
      * @return {@code true} - если есть права, {@code false} - если прав нет
+     * @throws CommentNotFoundException если комментария с данным id не существует
      */
     @Override
-    public boolean userHaveAccessToComment(int commentId) {
+    public boolean userHaveAccessToComment(int commentId) throws CommentNotFoundException {
         log.info("Was invoked method - userHaveAccessToComment");
 
         User currentUser = getAuthUser();
-        if (currentUser == null) {
+        if (null == currentUser) {
             return false;
         }
         if (userIsAdmin(currentUser)) {
             return true;
         }
 
-        User userWhoCommented = commentRepository.findById(commentId).getUser();
-        if (userWhoCommented == null) {
+        Comment comment = commentRepository.findById(commentId);
+        if (null == comment) {
+            throw new CommentNotFoundException("Comment doesn't exist");
+        }
+
+        User userWhoCommented = comment.getUser();
+        if (null == userWhoCommented) {
             return false;
         } else {
             return Objects.equals(currentUser.getId(), userWhoCommented.getId());
@@ -56,21 +66,27 @@ public class AccessRightValidatorImpl implements AccessRightValidator {
      *
      * @param adId идентификатор объявления
      * @return {@code true} - если есть права, {@code false} - если прав нет
+     * @throws AdNotFoundException если объявления с данным id не существует
      */
     @Override
-    public boolean userHaveAccessToAd(int adId) {
+    public boolean userHaveAccessToAd(int adId) throws AdNotFoundException {
         log.info("Was invoked method - userHaveAccessToAd");
 
         User currentUser = getAuthUser();
-        if (currentUser == null) {
+        if (null == currentUser) {
             return false;
         }
         if (userIsAdmin(currentUser)) {
             return true;
         }
 
-        User userWhoCommented = adsRepository.findById(adId).getAuthor();
-        if (userWhoCommented == null) {
+        Ads ad = adsRepository.findById(adId);
+        if (null == ad) {
+            throw new AdNotFoundException("Ad doesn't exist");
+        }
+
+        User userWhoCommented = ad.getAuthor();
+        if (null == userWhoCommented) {
             return false;
         } else {
             return Objects.equals(currentUser.getId(), userWhoCommented.getId());
@@ -80,7 +96,7 @@ public class AccessRightValidatorImpl implements AccessRightValidator {
     /**
      * Метод возвращает авторизованного пользователя.
      *
-     * @return авторизованный пользователь
+     * @return {@link User}
      */
     private User getAuthUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
