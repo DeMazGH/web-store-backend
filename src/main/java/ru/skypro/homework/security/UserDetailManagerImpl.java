@@ -58,7 +58,7 @@ public class UserDetailManagerImpl implements UserDetailsManager {
     public UserDetails loadUserByUsername(String email) throws UserNotFoundException {
         log.info("Was invoked method - loadUserByUsername");
         User user = userRepository.findByEmail(email);
-        if (null == user) {
+        if (user == null) {
             throw new UserNotFoundException("User doesn't exists");
         }
         securityUser.setUser(user);

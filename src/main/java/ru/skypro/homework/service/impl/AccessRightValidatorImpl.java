@@ -41,7 +41,7 @@ public class AccessRightValidatorImpl implements AccessRightValidator {
         log.info("Was invoked method - userHaveAccessToComment");
 
         User currentUser = getAuthUser();
-        if (null == currentUser) {
+        if (currentUser == null) {
             return false;
         }
         if (userIsAdmin(currentUser)) {
@@ -49,12 +49,12 @@ public class AccessRightValidatorImpl implements AccessRightValidator {
         }
 
         Comment comment = commentRepository.findById(commentId);
-        if (null == comment) {
+        if (comment == null) {
             throw new CommentNotFoundException("Comment doesn't exist");
         }
 
         User userWhoCommented = comment.getUser();
-        if (null == userWhoCommented) {
+        if (userWhoCommented == null) {
             return false;
         } else {
             return Objects.equals(currentUser.getId(), userWhoCommented.getId());
@@ -73,7 +73,7 @@ public class AccessRightValidatorImpl implements AccessRightValidator {
         log.info("Was invoked method - userHaveAccessToAd");
 
         User currentUser = getAuthUser();
-        if (null == currentUser) {
+        if (currentUser == null) {
             return false;
         }
         if (userIsAdmin(currentUser)) {
@@ -81,12 +81,12 @@ public class AccessRightValidatorImpl implements AccessRightValidator {
         }
 
         Ads ad = adsRepository.findById(adId);
-        if (null == ad) {
+        if (ad == null) {
             throw new AdNotFoundException("Ad doesn't exist");
         }
 
         User userWhoCommented = ad.getAuthor();
-        if (null == userWhoCommented) {
+        if (userWhoCommented == null) {
             return false;
         } else {
             return Objects.equals(currentUser.getId(), userWhoCommented.getId());
