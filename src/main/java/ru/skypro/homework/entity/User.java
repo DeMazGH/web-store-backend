@@ -21,9 +21,11 @@ public class User {
     private String firstName;
     private String lastName;
     private String phone;
+
     @OneToOne
     @JoinColumn(name = "avatar_id")
     private Avatar avatar;
+
     private String password;
     private Role role;
 }

@@ -2,7 +2,9 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ImageServiceImpl imageService;
+    private final PasswordEncoder encoder;
 
     /**
      * Метод принимает данные в виде DTO о текущем и новом паролях,
@@ -39,10 +42,10 @@ public class UserServiceImpl implements UserService {
     public boolean setPassword(NewPasswordDto newPasswordDto) {
         log.info("Was invoked method - setPassword");
         User currentUser = getAuthUser();
-        if (!currentUser.getPassword().equals(newPasswordDto.getCurrentPassword())) {
+        if (!encoder.matches(newPasswordDto.getCurrentPassword(), currentUser.getPassword())) {
             return false;
         } else {
-            currentUser.setPassword(newPasswordDto.getNewPassword());
+            currentUser.setPassword(encoder.encode(newPasswordDto.getNewPassword()));
             userRepository.save(currentUser);
             return true;
         }
@@ -105,6 +108,7 @@ public class UserServiceImpl implements UserService {
      * @return авторизованный пользователь
      */
     private User getAuthUser() {
-        return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findByEmail(authentication.getName());
     }
 }
