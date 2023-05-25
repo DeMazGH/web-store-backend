@@ -1,24 +1,21 @@
 package ru.skypro.homework.security;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.entity.User;
+import ru.skypro.homework.exception.UserNotFoundException;
 import ru.skypro.homework.repository.UserRepository;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserDetailManagerImpl implements UserDetailsManager {
 
     private final UserRepository userRepository;
     private final SecurityUser securityUser;
-
-    public UserDetailManagerImpl(UserRepository userRepository, SecurityUser securityUser) {
-        this.userRepository = userRepository;
-        this.securityUser = securityUser;
-    }
 
     @Override
     public void createUser(UserDetails user) {
@@ -36,6 +33,13 @@ public class UserDetailManagerImpl implements UserDetailsManager {
     public void changePassword(String oldPassword, String newPassword) {
     }
 
+    /**
+     * Метод ищет пользователя в БД по его логину,
+     * возвращает {@code true} если пользователь есть в БД, {@code false} если пользователя нет в БД.
+     *
+     * @param email логин пользователя
+     * @return {@code true}/{@code false}
+     */
     @Override
     public boolean userExists(String email) {
         log.info("Was invoked method - userExists");
@@ -43,19 +47,19 @@ public class UserDetailManagerImpl implements UserDetailsManager {
     }
 
     /**
-     * Метод из БД получает пользователя по его имени, если пользователь не существует - выкидывает исключение,
+     * Метод из БД получает пользователя по его логину, если пользователь не существует - выкидывает исключение,
      * если существует - возвращает его в виде сущности {@link SecurityUser}.
      *
-     * @param email имя пользователя
+     * @param email логин пользователя
      * @return {@link SecurityUser}
-     * @throws UsernameNotFoundException если пользователь не найден в БД
+     * @throws UserNotFoundException если пользователь не найден в БД
      */
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UserNotFoundException {
         log.info("Was invoked method - loadUserByUsername");
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException("User doesn't exists");
+            throw new UserNotFoundException("User doesn't exists");
         }
         securityUser.setUser(user);
         return securityUser;

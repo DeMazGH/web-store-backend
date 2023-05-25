@@ -1,5 +1,6 @@
 package ru.skypro.homework.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,15 +20,11 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/ads")
 @CrossOrigin(value = "http://localhost:3000")
+@RequiredArgsConstructor
 public class AdsController {
 
     private final AdsService adsService;
     private final AccessRightValidator accessRightValidator;
-
-    public AdsController(AdsService adsService, AccessRightValidator accessRightValidator) {
-        this.adsService = adsService;
-        this.accessRightValidator = accessRightValidator;
-    }
 
     @GetMapping()
     public ResponseEntity<ResponseWrapperAdsDto> getAllAds() {
@@ -50,7 +47,7 @@ public class AdsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAd(@PathVariable("id") int adId) {
+    public ResponseEntity<?> deleteAd(@PathVariable("id") int adId) throws IOException {
         log.info("Was invoked method - deleteAd");
         if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

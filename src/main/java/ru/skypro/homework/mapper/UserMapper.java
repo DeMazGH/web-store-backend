@@ -19,11 +19,6 @@ public interface UserMapper {
     @Mapping(source = "avatarApi", target = "image")
     UserDto userToUserDto(User user, String avatarApi);
 
-    User userDtoToUser(UserDto userDto);
-
-    @Mapping(source = "email", target = "username")
-    RegisterReq userToRegisterReq(User user);
-
     @Mapping(source = "username", target = "email")
     User registerReqToUser(RegisterReq registerReq);
 }
