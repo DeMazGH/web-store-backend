@@ -50,7 +50,7 @@ public class AdsController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAd(@PathVariable("id") int adId) {
+    public ResponseEntity<?> deleteAd(@PathVariable("id") int adId) throws IOException {
         log.info("Was invoked method - deleteAd");
         if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

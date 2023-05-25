@@ -18,6 +18,8 @@ import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Сервис для работы с сущностью {@link Ads}.
@@ -79,8 +81,9 @@ public class AdsService {
      *
      * @param adId идентификатор объявления
      */
-    public void deleteAd(int adId) {
+    public void deleteAd(int adId) throws IOException {
         log.info("Was invoked method - deleteAd");
+        deleteAdImage(adId);
         adsRepository.deleteById(adId);
     }
 
@@ -150,5 +153,17 @@ public class AdsService {
      */
     private User getAuthUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+
+    private void deleteAdImage(int adId) throws IOException {
+        Ads ad = adsRepository.findById(adId);
+        if (null == ad) {
+            throw new RuntimeException("Ad don't exist");
+        }
+        Image adImage = ad.getImage();
+        if (null == adImage) {
+            return;
+        }
+        Files.deleteIfExists(Path.of(adImage.getFilePath()));
     }
 }
