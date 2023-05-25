@@ -1,5 +1,6 @@
 package ru.skypro.homework.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,18 +12,14 @@ import ru.skypro.homework.service.AccessRightValidator;
 import ru.skypro.homework.service.CommentService;
 
 @Slf4j
-@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
+@CrossOrigin(value = "http://localhost:3000")
+@RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
     private final AccessRightValidator accessRightValidator;
-
-    public CommentController(CommentService commentService, AccessRightValidator accessRightValidator) {
-        this.commentService = commentService;
-        this.accessRightValidator = accessRightValidator;
-    }
 
     @GetMapping("{ad_pk}/comments")
     public ResponseEntity<ResponseWrapperCommentDto> getAdComments(@PathVariable("ad_pk") int adId) {

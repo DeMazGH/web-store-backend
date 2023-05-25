@@ -15,8 +15,9 @@ import java.nio.file.Files;
 @Slf4j
 @RestController
 @RequestMapping("/images")
+@CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
+
 public class ImageController {
 
     private final ImageService imageService;

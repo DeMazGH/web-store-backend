@@ -1,7 +1,5 @@
 package ru.skypro.homework.service;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,22 +7,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import ru.skypro.homework.dto.CommentDto;
-import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
-
-import java.util.Collection;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static ru.skypro.homework.ConstantsTest.*;
+import ru.skypro.homework.service.impl.CommentServiceImpl;
 
 
 //Тесты для класса в разработке, здесь только наброски для экспериментов, прошу игнорировать этот класс при проверке
@@ -42,7 +29,7 @@ class CommentServiceTest {
     CommentMapper commentMapper;
 
     @InjectMocks
-    CommentService out;
+    CommentServiceImpl out;
 
     @Mock
     private Authentication auth;
