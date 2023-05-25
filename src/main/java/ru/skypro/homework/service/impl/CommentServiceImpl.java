@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateCommentDto;
 import ru.skypro.homework.dto.ResponseWrapperCommentDto;
+import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.Comment;
+import ru.skypro.homework.exception.AdNotFoundException;
+import ru.skypro.homework.exception.CommentNotFoundException;
 import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.mapper.ResponseWrapperCommentDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
@@ -42,8 +45,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * Метод принимает id объявления для которого создается комментарий и необходимые данные для создания комментария,
-     * в виде DTO. На их основе создает сущность {@link Comment} и сохраняет ее в БД.
+     * Метод принимает id объявления для которого создается комментарий и необходимые данные для создания комментария
+     * в виде DTO. Проверяет, существует ли такое объявление, если не существует - выбрасывает исключение/
+     * На основе данных создает сущность {@link Comment}, устанавливает значение для полей и сохраняет сущность в БД.
      * После сохранения возвращает актуальные данные о созданном комментарии в виде DTO.
      *
      * @param adId           идентификатор объявления для которого создается комментарий
@@ -51,12 +55,17 @@ public class CommentServiceImpl implements CommentService {
      * @return {@link CommentDto}
      */
     @Override
-    public CommentDto addCommentToAd(int adId, CreateCommentDto createdComment) {
+    public CommentDto addCommentToAd(int adId, CreateCommentDto createdComment) throws AdNotFoundException {
         log.info("Was invoked method - addCommentToAd");
+
+        Ads ad = adsRepository.findById(adId);
+        if (ad == null) {
+            throw new AdNotFoundException("Ad doesn't exist");
+        }
 
         Comment newComment = CommentMapper.INSTANCE.createCommentDtoToComment(createdComment);
         newComment.setCreatedAt(LocalDateTime.now());
-        newComment.setAds(adsRepository.getReferenceById(adId));
+        newComment.setAds(ad);
         newComment.setUser(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()));
 
         Comment savedComment = commentRepository.save(newComment);
@@ -77,20 +86,20 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * Метод принимает id комментария и его актуальные данные, ищет сущность {@link Comment} в БД,
-     * если комментарий не найден - возвращает {@code null},
+     * если комментарий не найден - выбрасывает исключение,
      * если найден - изменяет данные на актуальные и возвращает новые данные комментария в виде DTO.
      *
      * @param commentId идентификатор комментария
      * @param newData   новые данные для изменения комментария
-     * @return {@link CommentDto} / {@code null}
+     * @return {@link CommentDto}
      */
     @Override
-    public CommentDto updateAdComment(int commentId, CommentDto newData) {
+    public CommentDto updateAdComment(int commentId, CommentDto newData) throws CommentNotFoundException {
         log.info("Was invoked method - updateAdComment");
 
         Comment oldCommentData = commentRepository.findById(commentId);
         if (oldCommentData == null) {
-            return null;
+            throw new CommentNotFoundException("Comment doesn't exist");
         }
 
         oldCommentData.setText(newData.getText());
@@ -108,11 +117,11 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public boolean dataIsConsistent(int adId, int commentId) {
-        if (null == adsRepository.findById(adId)) {
+        if (adsRepository.findById(adId) == null) {
             return false;
         }
         Comment comment = commentRepository.findById(commentId);
-        if (null == comment) {
+        if (comment == null) {
             return false;
         }
         return adId == comment.getAds().getId();
