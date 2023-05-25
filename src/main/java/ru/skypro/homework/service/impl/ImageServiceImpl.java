@@ -9,6 +9,8 @@ import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.Avatar;
 import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.User;
+import ru.skypro.homework.exception.AvatarNotFoundException;
+import ru.skypro.homework.exception.ImageNotFoundException;
 import ru.skypro.homework.repository.AvatarRepository;
 import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.service.ImageService;
@@ -20,6 +22,9 @@ import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
+/**
+ * Сервис для работы с изображениями (сущности {@link Avatar} и {@link Image})
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,9 +39,18 @@ public class ImageServiceImpl implements ImageService {
     @Value("${user.avatar.dir.path}")
     private String avatarDir;
 
+    /**
+     * Метод создает путь по которому сохранит файл изображения, копирует переданный файл по этому пути.
+     * Далее ищет картинку в БД, если сущность {@link Image} не найдена - создает новую,
+     * устанавливает новые значения полей сущности и сохраняет ее в БД.
+     *
+     * @param ad      объявление для которого сохраняется картинка
+     * @param adImage картинка для объявления
+     * @return {@link Image}
+     */
     @Override
-    public Image saveImageAsFile(Ads ad, MultipartFile adImage) throws IOException {
-        log.info("Was invoked method - updateImage");
+    public Image saveImage(Ads ad, MultipartFile adImage) throws IOException {
+        log.info("Was invoked method - saveImage");
 
         Path filePath = Path.of(imageDir, ad.getId() + "."
                 + getExtensions(Objects.requireNonNull(adImage.getOriginalFilename())));
@@ -50,15 +64,16 @@ public class ImageServiceImpl implements ImageService {
     }
 
     /**
-     * Метод принимает картинку, далее получает авторизованного пользователя из БД,
-     * создает путь файла для картинки, директорию, удаляет старую картинку, создает файл
-     * и копирует картинку, устанавливает значение пути картинки у текущего пользователя и сохраняет изменения в БД.
+     * Метод создает путь по которому сохранит файл изображения, копирует переданный файл по этому пути.
+     * Далее ищет аватар в БД, если сущность {@link Avatar} не найдена - создает новую,
+     * устанавливает новые значения полей сущности и сохраняет ее в БД.
      *
+     * @param currentUser пользователь для которого сохраняется картинка
      * @param avatarImage аватар пользователя
-     *                    *@throws IOException
+     * @return {@link Avatar}
      */
     @Override
-    public Avatar saveAvatarAsFile(User currentUser, MultipartFile avatarImage) throws IOException {
+    public Avatar saveAvatar(User currentUser, MultipartFile avatarImage) throws IOException {
         log.info("Was invoked method - updateImage");
 
         Path filePath = Path.of(avatarDir, currentUser.getEmail() + "."
@@ -72,55 +87,92 @@ public class ImageServiceImpl implements ImageService {
         return avatarRepository.save(avatar);
     }
 
+    /**
+     * Метод получает картинку из репозитория по id объявления,
+     * проверяет - существует ли она, если нет выбрасывает исключение,
+     * если картинка найдена возвращает путь к изображению.
+     *
+     * @param adId id объявления
+     * @return {@link Path}
+     */
     @Override
-    public Path getImagePath(int adId) {
+    public Path getImagePath(int adId) throws ImageNotFoundException {
         log.info("Was invoked method - getImagePath");
         Image image = imageRepository.findImageByAdId(adId);
-        if (null == image) {
-            throw new RuntimeException("Image doesn't exist");
+        if (image == null) {
+            throw new ImageNotFoundException("Image doesn't exist");
         }
         return Path.of(image.getFilePath());
     }
 
+    /**
+     * Метод получает аватар из репозитория по id пользователя,
+     * проверяет - существует ли он, если нет выбрасывает исключение,
+     * если аватар найден возвращает путь к изображению.
+     *
+     * @param userId id пользователя
+     * @return {@link Path}
+     */
     @Override
-    public Path getAvatarPath(int userId) {
+    public Path getAvatarPath(int userId) throws AvatarNotFoundException {
         log.info("Was invoked method - getAvatarPath");
         Avatar avatar = avatarRepository.findByUserId(userId);
-        if (null == avatar) {
-            throw new RuntimeException("Avatar doesn't exist");
+        if (avatar == null) {
+            throw new AvatarNotFoundException("Avatar doesn't exist");
         }
         return Path.of(avatar.getFilePath());
     }
 
+    /**
+     * Метод получает картинку из репозитория по id объявления,
+     * проверяет - существует ли она, если нет выбрасывает исключение,
+     * если картинка найдена удаляет ее из файловой системы.
+     *
+     * @param adId id объявления
+     */
     @Override
     public void deleteAdImage(int adId) throws IOException {
         Image adImage = imageRepository.findImageByAdId(adId);
-        if (null == adImage) {
-            return;
+        if (adImage == null) {
+            throw new ImageNotFoundException("Image doesn't exist");
         }
         Files.deleteIfExists(Path.of(adImage.getFilePath()));
     }
 
+    /**
+     * Метод получает аватар из репозитория по id пользователя,
+     * проверяет - существует ли он, если нет выбрасывает исключение,
+     * если аватар найден удаляет его из файловой системы.
+     *
+     * @param userId id пользователя
+     */
     @Override
     public void deleteAvatar(int userId) throws IOException {
         Avatar avatar = avatarRepository.findByUserId(userId);
-        if (null == avatar) {
-            return;
+        if (avatar == null) {
+            throw new AvatarNotFoundException("Avatar doesn't exist");
         }
         Files.deleteIfExists(Path.of(avatar.getFilePath()));
     }
 
     /**
-     * Метод получает строку с именем файла, извлекает и возвращает расширение этого файла.
+     * Метод получает строку с именем файла, извлекает и возвращает расширение этого файла в виде строки.
      *
      * @param fileName имя файла
-     * @return расширение этого файла
+     * @return расширение файла
      */
     private String getExtensions(String fileName) {
         log.info("Was invoked method - getExtensions");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
+    /**
+     * Метод принимает изображение и путь по которому его нужно сохранить,
+     * создает директорию, и копирует в нее картинку.
+     *
+     * @param image    копируемое изображение
+     * @param filePath путь сохранения изображения
+     */
     private void copyImageAlongPath(MultipartFile image, Path filePath) throws IOException {
         Files.createDirectories(filePath.getParent());
         try (

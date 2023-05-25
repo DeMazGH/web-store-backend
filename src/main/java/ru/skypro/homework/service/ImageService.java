@@ -11,9 +11,9 @@ import java.nio.file.Path;
 
 public interface ImageService {
 
-    Image saveImageAsFile(Ads ad, MultipartFile adImage) throws IOException;
+    Image saveImage(Ads ad, MultipartFile adImage) throws IOException;
 
-    Avatar saveAvatarAsFile(User currentUser, MultipartFile avatarImage) throws IOException;
+    Avatar saveAvatar(User currentUser, MultipartFile avatarImage) throws IOException;
 
     Path getImagePath(int adId);
 
