@@ -12,6 +12,7 @@ import ru.skypro.homework.dto.ResponseWrapperAdsDto;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.User;
+import ru.skypro.homework.exception.AdNotFoundException;
 import ru.skypro.homework.mapper.AdsMapper;
 import ru.skypro.homework.mapper.ResponseWrapperAdsDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
@@ -55,12 +56,15 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public AdsDto createAd(CreateAdsDto properties, MultipartFile adImage) throws IOException {
         log.info("Was invoked method - createAd");
+
         Ads newAd = AdsMapper.INSTANCE.createAdsDtoToAds(properties);
         newAd.setAuthor(getAuthUser());
         Ads createdAd = adsRepository.save(newAd);
+
         Image image = imageService.saveImageAsFile(createdAd, adImage);
         createdAd.setImage(image);
         adsRepository.save(createdAd);
+
         return AdsMapper.INSTANCE.adsToAdsDto(createdAd);
     }
 
@@ -131,31 +135,35 @@ public class AdsServiceImpl implements AdsService {
 
     /**
      * Метод принимает id объявления и его новую картинку, ищет сущность {@link Ads} в БД,
-     * если объявление не найдено - возвращает {@code null},
-     * если найдено - изменяет картинку на новую и возвращает ссылку на картинку объявления.
+     * если объявление не найдено - выбрасывает исключение {@link AdNotFoundException},
+     * если найдено - удаляет старый файл картинки, сохраняет и присваивает новую картинку объявлению,
+     * возвращает ссылку на эндпоинт для получения картинки.
      *
      * @param adId    идентификатор объявления
      * @param adImage новая картинка объявления
-     * @return ссылка на картинку объявления
+     * @return эндпоинт для получения картинки
      */
     @Override
-    public String updateAdImage(int adId, MultipartFile adImage) throws IOException {
+    public String updateAdImage(int adId, MultipartFile adImage) throws IOException, AdNotFoundException {
         log.info("Was invoked method - updateAdImage");
 
         Ads oldAdData = adsRepository.findById(adId);
         if (oldAdData == null) {
-            throw new RuntimeException("Ad don't exist");
+            throw new AdNotFoundException("Ad don't exist");
         }
+
         imageService.deleteAdImage(adId);
+
         oldAdData.setImage(imageService.saveImageAsFile(oldAdData, adImage));
         Ads updatedAd = adsRepository.save(oldAdData);
+
         return updatedAd.getImage().getImageApi();
     }
 
     /**
      * Метод возвращает авторизованного пользователя.
      *
-     * @return авторизованный пользователь
+     * @return {@link User}
      */
     private User getAuthUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
