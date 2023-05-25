@@ -1,8 +1,6 @@
 package ru.skypro.homework.security;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,11 +15,9 @@ import java.util.List;
 @Slf4j
 @Component
 @RequestScope
-@RequiredArgsConstructor
+@Data
 public class SecurityUser implements UserDetails {
 
-    @Getter
-    @Setter
     private User user;
 
     @Override
