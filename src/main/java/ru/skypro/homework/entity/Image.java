@@ -21,6 +21,6 @@ public class Image {
     private Ads ad;
 
     public String getImageApi() {
-        return "/images/image/" + ad.getId();
+        return "/images/ads/" + ad.getId();
     }
 }

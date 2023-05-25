@@ -21,7 +21,7 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @GetMapping(value = "/image/{adId}", produces = {
+    @GetMapping(value = "/ads/{adId}", produces = {
             MediaType.IMAGE_JPEG_VALUE,
             MediaType.IMAGE_PNG_VALUE,
             MediaType.IMAGE_GIF_VALUE,
