@@ -7,18 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
-import ru.skypro.homework.entity.Avatar;
-import ru.skypro.homework.entity.Image;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Objects;
-
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
+import java.io.IOException;
 
 /**
  * Сервис для работы с сущностью {@link User}.
@@ -88,15 +81,15 @@ public class UserService {
      * создает путь файла для картинки, директорию, удаляет старую картинку, создает файл
      * и копирует картинку, устанавливает значение пути картинки у текущего пользователя и сохраняет изменения в БД.
      *
-     * @param image аватар пользователя
-     *              *@throws IOException
+     * @param avatar аватар пользователя
+     *               *@throws IOException
      */
-    public void updateImage(MultipartFile image) throws IOException {
+    public void updateImage(MultipartFile avatar) throws IOException {
         log.info("Was invoked method - updateImage");
 
         User currentUser = getAuthUser();
-        Avatar avatar = imageService.saveAvatarAsFile(image, currentUser);
-        currentUser.setAvatar(avatar);
+        imageService.deleteAvatar(currentUser.getId());
+        currentUser.setAvatar(imageService.saveAvatarAsFile(currentUser, avatar));
         userRepository.save(currentUser);
     }
 

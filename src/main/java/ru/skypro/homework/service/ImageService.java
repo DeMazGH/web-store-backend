@@ -55,7 +55,7 @@ public class ImageService {
      * @param avatarImage аватар пользователя
      *                    *@throws IOException
      */
-    public Avatar saveAvatarAsFile(MultipartFile avatarImage, User currentUser) throws IOException {
+    public Avatar saveAvatarAsFile(User currentUser, MultipartFile avatarImage) throws IOException {
         log.info("Was invoked method - updateImage");
 
         Path filePath = Path.of(avatarDir, currentUser.getEmail() + "."
@@ -100,7 +100,6 @@ public class ImageService {
 
     private void copyImageAlongPath(MultipartFile image, Path filePath) throws IOException {
         Files.createDirectories(filePath.getParent());
-        Files.deleteIfExists(filePath);
         try (
                 InputStream is = image.getInputStream();
                 OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
@@ -109,5 +108,21 @@ public class ImageService {
         ) {
             bis.transferTo(bos);
         }
+    }
+
+    public void deleteAdImage(int adId) throws IOException {
+        Image adImage = imageRepository.findImageByAdId(adId);
+        if (null == adImage) {
+            return;
+        }
+        Files.deleteIfExists(Path.of(adImage.getFilePath()));
+    }
+
+    public void deleteAvatar(int userId) throws IOException {
+        Avatar avatar = avatarRepository.findByUserId(userId);
+        if (null == avatar) {
+            return;
+        }
+        Files.deleteIfExists(Path.of(avatar.getFilePath()));
     }
 }
