@@ -61,7 +61,7 @@ public class AdsServiceImpl implements AdsService {
         newAd.setAuthor(getAuthUser());
         Ads createdAd = adsRepository.save(newAd);
 
-        Image image = imageService.saveImageAsFile(createdAd, adImage);
+        Image image = imageService.saveImage(createdAd, adImage);
         createdAd.setImage(image);
         adsRepository.save(createdAd);
 
@@ -154,7 +154,7 @@ public class AdsServiceImpl implements AdsService {
 
         imageService.deleteAdImage(adId);
 
-        oldAdData.setImage(imageService.saveImageAsFile(oldAdData, adImage));
+        oldAdData.setImage(imageService.saveImage(oldAdData, adImage));
         Ads updatedAd = adsRepository.save(oldAdData);
 
         return updatedAd.getImage().getImageApi();

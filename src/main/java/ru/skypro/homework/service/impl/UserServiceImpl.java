@@ -13,7 +13,6 @@ import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
-import ru.skypro.homework.service.impl.ImageServiceImpl;
 
 import java.io.IOException;
 
@@ -98,7 +97,7 @@ public class UserServiceImpl implements UserService {
 
         User currentUser = getAuthUser();
         imageService.deleteAvatar(currentUser.getId());
-        currentUser.setAvatar(imageService.saveAvatarAsFile(currentUser, avatar));
+        currentUser.setAvatar(imageService.saveAvatar(currentUser, avatar));
         userRepository.save(currentUser);
     }
 
