@@ -23,4 +23,13 @@ public class Image {
     public String getImageApi() {
         return "/images/ads/" + ad.getId();
     }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "id=" + id +
+                ", filePath='" + filePath + '\'' +
+                ", ad=" + ad.getId() +
+                '}';
+    }
 }

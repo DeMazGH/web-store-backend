@@ -25,4 +25,13 @@ public class Avatar {
     public String getAvatarApi() {
         return "/images/avatar/" + user.getId();
     }
+
+    @Override
+    public String toString() {
+        return "Avatar{" +
+                "id=" + id +
+                ", filePath='" + filePath + '\'' +
+                ", user=" + user.getId() +
+                '}';
+    }
 }

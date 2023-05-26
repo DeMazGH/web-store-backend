@@ -1,5 +1,6 @@
 package ru.skypro.homework.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import static javax.persistence.CascadeType.ALL;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Ads {
 
     @Id
@@ -30,4 +32,17 @@ public class Ads {
 
     @OneToMany(mappedBy = "ads", cascade = ALL)
     private List<Comment> comments;
+
+    @Override
+    public String toString() {
+        return "Ads{" +
+                "id=" + id +
+                ", price=" + price +
+                ", description='" + description + '\'' +
+                ", title='" + title + '\'' +
+                ", author=" + author.getId() +
+                ", image=" + image.getId() +
+                ", comments=" + comments +
+                '}';
+    }
 }

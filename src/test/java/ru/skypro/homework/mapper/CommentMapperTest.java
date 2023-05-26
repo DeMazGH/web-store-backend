@@ -15,7 +15,7 @@ class CommentMapperTest {
 
         assertThat(actual).isNotNull();
         assertThat(actual.getAuthor()).isEqualTo(USER_ID);
-        assertThat(actual.getAuthorImage()).isEqualTo(IMAGE);
+        assertThat(actual.getAuthorImage()).isEqualTo(USER_AVATAR_API_1);
         assertThat(actual.getAuthorFirstName()).isEqualTo(FIRST_NAME);
         assertThat(actual.getCreatedAt()).isEqualTo(CREATED_AT_LONG);
         assertThat(actual.getPk()).isEqualTo(COMMENT_ID_1);
