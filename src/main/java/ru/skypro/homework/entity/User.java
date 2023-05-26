@@ -28,4 +28,18 @@ public class User {
 
     private String password;
     private Role role;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", avatar=" + avatar.getId() +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }
