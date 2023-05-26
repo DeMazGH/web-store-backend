@@ -134,7 +134,7 @@ public class ImageServiceImpl implements ImageService {
     public void deleteAdImage(int adId) throws IOException {
         Image adImage = imageRepository.findImageByAdId(adId);
         if (adImage == null) {
-            throw new ImageNotFoundException("Image doesn't exist");
+            return;
         }
         Files.deleteIfExists(Path.of(adImage.getFilePath()));
     }
@@ -150,7 +150,7 @@ public class ImageServiceImpl implements ImageService {
     public void deleteAvatar(int userId) throws IOException {
         Avatar avatar = avatarRepository.findByUserId(userId);
         if (avatar == null) {
-            throw new AvatarNotFoundException("Avatar doesn't exist");
+            return;
         }
         Files.deleteIfExists(Path.of(avatar.getFilePath()));
     }
