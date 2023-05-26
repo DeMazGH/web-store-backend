@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.Avatar;
@@ -18,7 +19,6 @@ import ru.skypro.homework.service.ImageService;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -53,7 +53,7 @@ public class ImageServiceImpl implements ImageService {
         log.info("Was invoked method - saveImage");
 
         Path filePath = Path.of(imageDir, ad.getId() + "."
-                + getExtensions(Objects.requireNonNull(adImage.getOriginalFilename())));
+                + StringUtils.getFilenameExtension(adImage.getOriginalFilename()));
         copyImageAlongPath(adImage, filePath);
 
         Image image = imageRepository.findImageByAd(ad).orElse(new Image());
@@ -77,7 +77,7 @@ public class ImageServiceImpl implements ImageService {
         log.info("Was invoked method - updateImage");
 
         Path filePath = Path.of(avatarDir, currentUser.getEmail() + "."
-                + getExtensions(Objects.requireNonNull(avatarImage.getOriginalFilename())));
+                + StringUtils.getFilenameExtension(avatarImage.getOriginalFilename()));
         copyImageAlongPath(avatarImage, filePath);
 
         Avatar avatar = avatarRepository.findByUser(currentUser).orElse(new Avatar());
@@ -153,17 +153,6 @@ public class ImageServiceImpl implements ImageService {
             return;
         }
         Files.deleteIfExists(Path.of(avatar.getFilePath()));
-    }
-
-    /**
-     * Метод получает строку с именем файла, извлекает и возвращает расширение этого файла в виде строки.
-     *
-     * @param fileName имя файла
-     * @return расширение файла
-     */
-    private String getExtensions(String fileName) {
-        log.info("Was invoked method - getExtensions");
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     /**
