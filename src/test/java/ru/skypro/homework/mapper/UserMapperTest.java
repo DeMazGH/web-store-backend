@@ -1,6 +1,5 @@
 package ru.skypro.homework.mapper;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
@@ -14,7 +13,13 @@ class UserMapperTest {
     void shouldMapUserToUserDto() {
         UserDto actual = UserMapper.INSTANCE.userToUserDto(USER_TEST);
 
-        Assertions.assertEquals(USER_DTO_TEST, actual);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getId()).isEqualTo(USER_ID);
+        assertThat(actual.getEmail()).isEqualTo(EMAIL);
+        assertThat(actual.getFirstName()).isEqualTo(FIRST_NAME);
+        assertThat(actual.getLastName()).isEqualTo(LAST_NAME);
+        assertThat(actual.getPhone()).isEqualTo(PHONE);
+        assertThat(actual.getImage()).isEqualTo(USER_AVATAR_API_1);
     }
 
     @Test
