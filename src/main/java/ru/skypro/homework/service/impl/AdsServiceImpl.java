@@ -18,6 +18,7 @@ import ru.skypro.homework.mapper.ResponseWrapperAdsDtoMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdsService;
+import ru.skypro.homework.service.ImageService;
 
 import java.io.IOException;
 
@@ -31,7 +32,7 @@ public class AdsServiceImpl implements AdsService {
 
     private final AdsRepository adsRepository;
     private final UserRepository userRepository;
-    private final ImageServiceImpl imageService;
+    private final ImageService imageService;
 
     /**
      * Метод получает список всех объявлений из {@link AdsRepository}, конвертирует полученный список
@@ -84,6 +85,7 @@ public class AdsServiceImpl implements AdsService {
 
     /**
      * Метод принимает id объявления, по id удаляет файл картинки, далее удаляет сущность {@link Ads} из БД.
+     * Каскадно удаляются все сущности {@link ru.skypro.homework.entity.Comment} связанные с этим объявлением.
      *
      * @param adId идентификатор объявления
      */
