@@ -21,6 +21,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
+//Тестовый класс в доработке
 public class UserServiceTest {
 
     private UserService userService;

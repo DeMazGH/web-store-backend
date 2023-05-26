@@ -21,6 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+//Тестовый класс в доработке
 public class AdsServiceTest {
 
     @Mock
@@ -34,7 +35,7 @@ public class AdsServiceTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        adsService = new AdsService(adsRepository, userRepository);
+//        adsService = new AdsService(adsRepository, userRepository);
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("test@example.com", null));
         SecurityContextHolder.setContext(securityContext);
@@ -72,7 +73,7 @@ public class AdsServiceTest {
         author.setFirstName("John");
         author.setLastName("Doe");
         author.setPhone("1234567890");
-        author.setImage("path/to/user/image.jpg");
+//        author.setImage("path/to/user/image.jpg");
         author.setPassword("password123");
         author.setRole(Role.USER);
 
@@ -82,7 +83,7 @@ public class AdsServiceTest {
         ad.setDescription("This is a great product.");
         ad.setTitle("Awesome Product");
         ad.setAuthor(author);
-        ad.setImage("path/to/ad/image.jpg");
+//        ad.setImage("path/to/ad/image.jpg");
 
         FullAdsDto fullAdsDtoExpected = new FullAdsDto();
         fullAdsDtoExpected.setImage("path/to/ad/image.jpg");
@@ -111,7 +112,7 @@ public class AdsServiceTest {
         author.setFirstName("John");
         author.setLastName("Doe");
         author.setPhone("1234567890");
-        author.setImage("path/to/user/image.jpg");
+//        author.setImage("path/to/user/image.jpg");
         author.setPassword("password123");
         author.setRole(Role.USER);
 
@@ -121,7 +122,7 @@ public class AdsServiceTest {
         oldAdData.setDescription("This is a great product.");
         oldAdData.setTitle("Awesome Product");
         oldAdData.setAuthor(author);
-        oldAdData.setImage("path/to/ad/image.jpg");
+//        oldAdData.setImage("path/to/ad/image.jpg");
 
         CreateAdsDto newAdData = new CreateAdsDto();
         newAdData.setDescription("New description");
