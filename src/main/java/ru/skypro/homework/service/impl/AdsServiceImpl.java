@@ -84,6 +84,7 @@ public class AdsServiceImpl implements AdsService {
 
     /**
      * Метод принимает id объявления, по id удаляет файл картинки, далее удаляет сущность {@link Ads} из БД.
+     * Каскадно удаляются все сущности {@link ru.skypro.homework.entity.Comment} связанные с этим объявлением.
      *
      * @param adId идентификатор объявления
      */
