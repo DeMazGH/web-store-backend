@@ -14,7 +14,7 @@ import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
 
-//Тесты для класса в разработке, здесь только наброски для экспериментов, прошу игнорировать этот класс при проверке
+//Тестовый класс в доработке
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
 
