@@ -3,6 +3,7 @@ package ru.skypro.homework.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,20 +22,11 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "ads_id")
+    @ToString.Exclude
     private Ads ads;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", text='" + text + '\'' +
-                ", createdAt=" + createdAt +
-                ", ads=" + ads.getId() +
-                ", user=" + user.getId() +
-                '}';
-    }
 }

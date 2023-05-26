@@ -2,6 +2,7 @@ package ru.skypro.homework.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -18,18 +19,10 @@ public class Image {
 
     @OneToOne
     @JoinColumn(name = "ad_id")
+    @ToString.Exclude
     private Ads ad;
 
     public String getImageApi() {
         return "/images/ads/" + ad.getId();
-    }
-
-    @Override
-    public String toString() {
-        return "Image{" +
-                "id=" + id +
-                ", filePath='" + filePath + '\'' +
-                ", ad=" + ad.getId() +
-                '}';
     }
 }

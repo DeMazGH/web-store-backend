@@ -3,6 +3,7 @@ package ru.skypro.homework.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
@@ -24,22 +25,9 @@ public class User {
 
     @OneToOne
     @JoinColumn(name = "avatar_id")
+    @ToString.Exclude
     private Avatar avatar;
 
     private String password;
     private Role role;
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", avatar=" + avatar.getId() +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                '}';
-    }
 }

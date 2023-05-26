@@ -3,6 +3,7 @@ package ru.skypro.homework.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,25 +25,14 @@ public class Ads {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User author;
 
     @OneToOne(cascade = ALL)
     @JoinColumn(name = "image_id")
+    @ToString.Exclude
     private Image image;
 
     @OneToMany(mappedBy = "ads", cascade = ALL)
     private List<Comment> comments;
-
-    @Override
-    public String toString() {
-        return "Ads{" +
-                "id=" + id +
-                ", price=" + price +
-                ", description='" + description + '\'' +
-                ", title='" + title + '\'' +
-                ", author=" + author.getId() +
-                ", image=" + image.getId() +
-                ", comments=" + comments +
-                '}';
-    }
 }
