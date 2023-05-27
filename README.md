@@ -16,10 +16,10 @@ https://github.com/BizinMitya/front-react-avito
 ## Установка и запуск образа фронтэнд-части в Docker
 
 Установка:  
-`docker pull ghcr.io/bizinmitya/front-react-avito:v1.11`
+`docker pull ghcr.io/bizinmitya/front-react-avito:v1.13`
 
 Запуск:  
-`docker run --rm --name front-react-avito-v1.11-instance -p3000:3000 ghcr.io/bizinmitya/front-react-avito:v1.11`
+`docker run --rm --name front-react-avito-v1.13-instance -p3000:3000 ghcr.io/bizinmitya/front-react-avito:v1.13`
 
 
 ## Спецификация
