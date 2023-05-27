@@ -44,7 +44,7 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public ResponseWrapperAdsDto getAllAds() {
-        log.info("Was invoked method - getAllAds");
+        log.debug("Was invoked method - getAllAds");
         return responseWrapperAdsDtoMapper.toResponseWrapperAdsDto(adsRepository.findAll());
     }
 
@@ -58,7 +58,7 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public AdsDto createAd(CreateAdsDto properties, MultipartFile adImage) throws IOException {
-        log.info("Was invoked method - createAd");
+        log.debug("Was invoked method - createAd");
 
         Ads newAd = adsMapper.createAdsDtoToAds(properties);
         newAd.setAuthor(getAuthUser());
@@ -80,7 +80,7 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public FullAdsDto getInfoAboutAd(int adId) {
-        log.info("Was invoked method - getInfoAboutAd");
+        log.debug("Was invoked method - getInfoAboutAd");
         Ads ad = adsRepository.findById(adId);
         return (ad == null) ? null : adsMapper.adToFullAdsDto(ad);
     }
@@ -93,7 +93,7 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public void deleteAd(int adId) throws IOException {
-        log.info("Was invoked method - deleteAd");
+        log.debug("Was invoked method - deleteAd");
         imageService.deleteAdImage(adId);
         adsRepository.deleteById(adId);
     }
@@ -109,7 +109,7 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public AdsDto updateAd(int adId, CreateAdsDto newAdData) {
-        log.info("Was invoked method - updateAd");
+        log.debug("Was invoked method - updateAd");
 
         Ads oldAdData = adsRepository.findById(adId);
         if (oldAdData == null) {
@@ -133,7 +133,7 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public ResponseWrapperAdsDto getMyAds() {
-        log.info("Was invoked method - getMyAds");
+        log.debug("Was invoked method - getMyAds");
         return responseWrapperAdsDtoMapper.toResponseWrapperAdsDto(adsRepository.findAllByAuthor(getAuthUser()));
     }
 
@@ -149,7 +149,7 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public String updateAdImage(int adId, MultipartFile adImage) throws IOException, AdNotFoundException {
-        log.info("Was invoked method - updateAdImage");
+        log.debug("Was invoked method - updateAdImage");
 
         Ads oldAdData = adsRepository.findById(adId);
         if (oldAdData == null) {

@@ -42,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public ResponseWrapperCommentDto getAdComments(int adId) {
-        log.info("Was invoked method - getAdComments");
+        log.debug("Was invoked method - getAdComments");
         return responseWrapperCommentDtoMapper.toResponseWrapperCommentDto(commentRepository.findByAds_Id(adId));
     }
 
@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public CommentDto addCommentToAd(int adId, CreateCommentDto createdComment) throws AdNotFoundException {
-        log.info("Was invoked method - addCommentToAd");
+        log.debug("Was invoked method - addCommentToAd");
 
         Ads ad = adsRepository.findById(adId);
         if (ad == null) {
@@ -82,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public void deleteAdsComment(int commentId) {
-        log.info("Was invoked method - deleteAdsComment");
+        log.debug("Was invoked method - deleteAdsComment");
         commentRepository.deleteById(commentId);
     }
 
@@ -97,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public CommentDto updateAdComment(int commentId, CommentDto newData) throws CommentNotFoundException {
-        log.info("Was invoked method - updateAdComment");
+        log.debug("Was invoked method - updateAdComment");
 
         Comment oldCommentData = commentRepository.findById(commentId);
         if (oldCommentData == null) {

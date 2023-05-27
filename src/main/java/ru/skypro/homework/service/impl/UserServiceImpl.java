@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean setPassword(NewPasswordDto newPasswordDto) {
-        log.info("Was invoked method - setPassword");
+        log.debug("Was invoked method - setPassword");
         User currentUser = getAuthUser();
         if (!encoder.matches(newPasswordDto.getCurrentPassword(), currentUser.getPassword())) {
             return false;
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto getMe() {
-        log.info("Was invoked method - getMe");
+        log.debug("Was invoked method - getMe");
         User currentUser = getAuthUser();
         return userMapper.userToUserDto(currentUser);
     }
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto updateUser(UserDto userDto) {
-        log.info("Was invoked method - updateUser");
+        log.debug("Was invoked method - updateUser");
         User oldUserData = getAuthUser();
 
         oldUserData.setFirstName(userDto.getFirstName());
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateImage(MultipartFile avatar) throws IOException {
-        log.info("Was invoked method - updateImage");
+        log.debug("Was invoked method - updateImage");
 
         User currentUser = getAuthUser();
         imageService.deleteAvatar(currentUser.getId());

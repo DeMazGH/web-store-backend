@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean login(String userName, String password) {
-        log.info("Was invoked method - login");
+        log.debug("Was invoked method - login");
         if (!manager.userExists(userName)) {
             return false;
         }
@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean register(RegisterReq registerData, Role role) {
-        log.info("Was invoked method - register");
+        log.debug("Was invoked method - register");
         if (manager.userExists(registerData.getUsername())) {
             return false;
         }
@@ -69,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
      * @param role         роль пользователя
      */
     private void saveUserInDb(RegisterReq registerData, Role role) {
-        log.info("Was invoked method - saveUserInDb");
+        log.debug("Was invoked method - saveUserInDb");
         User newUser = userMapper.registerReqToUser(registerData);
         newUser.setPassword(encoder.encode(registerData.getPassword()));
         newUser.setRole(role);
