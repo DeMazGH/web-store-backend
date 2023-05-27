@@ -1,6 +1,8 @@
 package ru.skypro.homework.mapper;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.entity.Ads;
@@ -8,11 +10,15 @@ import ru.skypro.homework.entity.Ads;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static ru.skypro.homework.ConstantsTest.*;
 
+@SpringBootTest
 class AdsMapperTest {
+
+    @SpyBean
+    private AdsMapper adsMapper;
 
     @Test
     void shouldMapAdsToAdsDto() {
-        AdsDto actual = AdsMapper.INSTANCE.adsToAdsDto(ADS_TEST_1);
+        AdsDto actual = adsMapper.adsToAdsDto(ADS_TEST_1);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getAuthor()).isEqualTo(USER_ID);
@@ -24,7 +30,7 @@ class AdsMapperTest {
 
     @Test
     void createAdsDtoToAds() {
-        Ads actual = AdsMapper.INSTANCE.createAdsDtoToAds(CREATE_ADS_DTO_TEST);
+        Ads actual = adsMapper.createAdsDtoToAds(CREATE_ADS_DTO_TEST);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getDescription()).isEqualTo(DESCRIPTION);
@@ -34,7 +40,7 @@ class AdsMapperTest {
 
     @Test
     void adToFullAdsDto() {
-        FullAdsDto actual = AdsMapper.INSTANCE.adToFullAdsDto(ADS_TEST_1);
+        FullAdsDto actual = adsMapper.adToFullAdsDto(ADS_TEST_1);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getId()).isEqualTo(ADS_ID_1);

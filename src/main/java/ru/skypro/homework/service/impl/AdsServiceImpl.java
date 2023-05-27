@@ -33,6 +33,8 @@ public class AdsServiceImpl implements AdsService {
     private final AdsRepository adsRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
+    private final AdsMapper adsMapper;
+    private final ResponseWrapperAdsDtoMapper responseWrapperAdsDtoMapper;
 
     /**
      * Метод получает список всех объявлений из {@link AdsRepository}, конвертирует полученный список
@@ -43,7 +45,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public ResponseWrapperAdsDto getAllAds() {
         log.info("Was invoked method - getAllAds");
-        return ResponseWrapperAdsDtoMapper.INSTANCE.toResponseWrapperAdsDto(adsRepository.findAll());
+        return responseWrapperAdsDtoMapper.toResponseWrapperAdsDto(adsRepository.findAll());
     }
 
     /**
@@ -58,7 +60,7 @@ public class AdsServiceImpl implements AdsService {
     public AdsDto createAd(CreateAdsDto properties, MultipartFile adImage) throws IOException {
         log.info("Was invoked method - createAd");
 
-        Ads newAd = AdsMapper.INSTANCE.createAdsDtoToAds(properties);
+        Ads newAd = adsMapper.createAdsDtoToAds(properties);
         newAd.setAuthor(getAuthUser());
         Ads createdAd = adsRepository.save(newAd);
 
@@ -66,7 +68,7 @@ public class AdsServiceImpl implements AdsService {
         createdAd.setImage(image);
         adsRepository.save(createdAd);
 
-        return AdsMapper.INSTANCE.adsToAdsDto(createdAd);
+        return adsMapper.adsToAdsDto(createdAd);
     }
 
     /**
@@ -80,7 +82,7 @@ public class AdsServiceImpl implements AdsService {
     public FullAdsDto getInfoAboutAd(int adId) {
         log.info("Was invoked method - getInfoAboutAd");
         Ads ad = adsRepository.findById(adId);
-        return (ad == null) ? null : AdsMapper.INSTANCE.adToFullAdsDto(ad);
+        return (ad == null) ? null : adsMapper.adToFullAdsDto(ad);
     }
 
     /**
@@ -120,7 +122,7 @@ public class AdsServiceImpl implements AdsService {
 
         Ads updatedAd = adsRepository.save(oldAdData);
 
-        return AdsMapper.INSTANCE.adsToAdsDto(updatedAd);
+        return adsMapper.adsToAdsDto(updatedAd);
     }
 
     /**
@@ -132,7 +134,7 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public ResponseWrapperAdsDto getMyAds() {
         log.info("Was invoked method - getMyAds");
-        return ResponseWrapperAdsDtoMapper.INSTANCE.toResponseWrapperAdsDto(adsRepository.findAllByAuthor(getAuthUser()));
+        return responseWrapperAdsDtoMapper.toResponseWrapperAdsDto(adsRepository.findAllByAuthor(getAuthUser()));
     }
 
     /**

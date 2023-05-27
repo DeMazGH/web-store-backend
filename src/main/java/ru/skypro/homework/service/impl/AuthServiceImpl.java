@@ -21,6 +21,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailManagerImpl manager;
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final UserMapper userMapper;
 
     /**
      * Метод проверяет есть ли пользователь в БД, если пользователь не найден в БД возвращает {@code false},
@@ -46,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
      * если пользователь найден, сохраняет его в БД и возвращает {@code true}.
      *
      * @param registerData данные для регистрации пользователя в виде DTO
-     * @param role роль пользователя {@link Role}
+     * @param role         роль пользователя {@link Role}
      * @return {@code true}/{@code false}
      */
     @Override
@@ -65,11 +66,11 @@ public class AuthServiceImpl implements AuthService {
      * сохраняет пользователя в БД.
      *
      * @param registerData данные для регистрации пользователя в виде DTO
-     * @param role роль пользователя
+     * @param role         роль пользователя
      */
     private void saveUserInDb(RegisterReq registerData, Role role) {
         log.info("Was invoked method - saveUserInDb");
-        User newUser = UserMapper.INSTANCE.registerReqToUser(registerData);
+        User newUser = userMapper.registerReqToUser(registerData);
         newUser.setPassword(encoder.encode(registerData.getPassword()));
         newUser.setRole(role);
         userRepository.save(newUser);

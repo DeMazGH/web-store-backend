@@ -1,17 +1,23 @@
 package ru.skypro.homework.mapper;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static ru.skypro.homework.ConstantsTest.*;
 
+@SpringBootTest
 class UserMapperTest {
+
+    @SpyBean
+    private UserMapper userMapper;
 
     @Test
     void shouldMapUserToUserDto() {
-        UserDto actual = UserMapper.INSTANCE.userToUserDto(USER_TEST);
+        UserDto actual = userMapper.userToUserDto(USER_TEST);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getId()).isEqualTo(USER_ID);
@@ -24,7 +30,7 @@ class UserMapperTest {
 
     @Test
     void shouldMapRegisterReqToUser() {
-        User actual = UserMapper.INSTANCE.registerReqToUser(REGISTER_REQ_TEST);
+        User actual = userMapper.registerReqToUser(REGISTER_REQ_TEST);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getEmail()).isEqualTo(EMAIL);

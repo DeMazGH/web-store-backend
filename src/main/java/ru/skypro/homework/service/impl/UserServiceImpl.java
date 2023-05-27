@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ImageServiceImpl imageService;
     private final PasswordEncoder encoder;
+    private final UserMapper userMapper;
 
     /**
      * Метод принимает данные в виде DTO о текущем и новом паролях,
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getMe() {
         log.info("Was invoked method - getMe");
         User currentUser = getAuthUser();
-        return UserMapper.INSTANCE.userToUserDto(currentUser);
+        return userMapper.userToUserDto(currentUser);
     }
 
     /**
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
         User newUserData = userRepository.save(oldUserData);
 
-        return UserMapper.INSTANCE.userToUserDto(newUserData);
+        return userMapper.userToUserDto(newUserData);
     }
 
     /**

@@ -2,16 +2,13 @@ package ru.skypro.homework.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateCommentDto;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.mapper.util.DateMapper;
 
-@Mapper(uses = DateMapper.class)
+@Mapper(componentModel = "spring", uses = DateMapper.class)
 public interface CommentMapper {
-
-    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
     default CommentDto commentToCommentDto(Comment comment) {
         return commentToCommentDto(comment, comment.getUser().getAvatar().getAvatarApi());

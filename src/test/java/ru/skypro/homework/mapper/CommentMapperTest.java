@@ -1,17 +1,23 @@
 package ru.skypro.homework.mapper;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.entity.Comment;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static ru.skypro.homework.ConstantsTest.*;
 
+@SpringBootTest
 class CommentMapperTest {
+
+    @SpyBean
+    private CommentMapper commentMapper;
 
     @Test
     void shouldMapCommentToCommentDto() {
-        CommentDto actual = CommentMapper.INSTANCE.commentToCommentDto(COMMENT_TEST_1);
+        CommentDto actual = commentMapper.commentToCommentDto(COMMENT_TEST_1);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getAuthor()).isEqualTo(USER_ID);
@@ -24,7 +30,7 @@ class CommentMapperTest {
 
     @Test
     void shouldMapCreateCommentDtoToComment() {
-        Comment actual = CommentMapper.INSTANCE.createCommentDtoToComment(CREATE_COMMENT_DTO_TEST);
+        Comment actual = commentMapper.createCommentDtoToComment(CREATE_COMMENT_DTO_TEST);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getText()).isEqualTo(TEXT);
