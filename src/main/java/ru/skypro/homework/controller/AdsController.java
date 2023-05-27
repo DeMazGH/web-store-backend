@@ -28,27 +28,27 @@ public class AdsController {
 
     @GetMapping()
     public ResponseEntity<ResponseWrapperAdsDto> getAllAds() {
-        log.info("Was invoked method - getAllAds");
+        log.debug("Was invoked method - getAllAds");
         return ResponseEntity.ok(adsService.getAllAds());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdsDto> createAd(@RequestPart("properties") CreateAdsDto properties,
                                            @RequestPart("image") MultipartFile adImage) throws IOException {
-        log.info("Was invoked method - createAd");
+        log.debug("Was invoked method - createAd");
         return ResponseEntity.ok(adsService.createAd(properties, adImage));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FullAdsDto> getInfoAboutAd(@PathVariable("id") int adId) {
-        log.info("Was invoked method - getInfoAboutAd");
+        log.debug("Was invoked method - getInfoAboutAd");
         FullAdsDto desiredAd = adsService.getInfoAboutAd(adId);
         return (desiredAd == null) ? ResponseEntity.notFound().build() : ResponseEntity.ok(desiredAd);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAd(@PathVariable("id") int adId) throws IOException {
-        log.info("Was invoked method - deleteAd");
+        log.debug("Was invoked method - deleteAd");
         if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
@@ -60,7 +60,7 @@ public class AdsController {
     @PatchMapping("/{id}")
     public ResponseEntity<AdsDto> updateAd(@PathVariable("id") int adId,
                                            @RequestBody CreateAdsDto newAdData) {
-        log.info("Was invoked method - updateAd");
+        log.debug("Was invoked method - updateAd");
         if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
@@ -71,14 +71,14 @@ public class AdsController {
 
     @GetMapping("/me")
     public ResponseEntity<ResponseWrapperAdsDto> getMyAds() {
-        log.info("Was invoked method - getMyAds");
+        log.debug("Was invoked method - getMyAds");
         return ResponseEntity.ok(adsService.getMyAds());
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> updateAdImage(@PathVariable("id") int adId,
                                                 @RequestPart("image") MultipartFile adImage) throws IOException {
-        log.info("Was invoked method - updateAdImage");
+        log.debug("Was invoked method - updateAdImage");
         if (!accessRightValidator.userHaveAccessToAd(adId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {

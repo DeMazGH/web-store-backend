@@ -29,7 +29,7 @@ public class ImageController {
             MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public void getImage(@PathVariable int adId,
                          HttpServletResponse response) throws IOException {
-        log.info("Was invoked method - getImage");
+        log.debug("Was invoked method - getImage");
         try (InputStream is = Files.newInputStream(imageService.getImagePath(adId));
              OutputStream os = response.getOutputStream()) {
             response.setStatus(200);
@@ -44,7 +44,7 @@ public class ImageController {
             MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public void getAvatar(@PathVariable int userId,
                           HttpServletResponse response) throws IOException {
-        log.info("Was invoked method - getAvatar");
+        log.debug("Was invoked method - getAvatar");
         try (InputStream is = Files.newInputStream(imageService.getAvatarPath(userId));
              OutputStream os = response.getOutputStream()) {
             response.setStatus(200);

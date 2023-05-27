@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPasswordDto passwordDto) {
-        log.info("Was invoked method - setPassword");
+        log.debug("Was invoked method - setPassword");
         if (userService.setPassword(passwordDto)) {
             return ResponseEntity.ok().build();
         } else {
@@ -34,19 +34,19 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> getMe() {
-        log.info("Was invoked method - getMe");
+        log.debug("Was invoked method - getMe");
         return ResponseEntity.ok(userService.getMe());
     }
 
     @PatchMapping("/me")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
-        log.info("Was invoked method - updateUser");
+        log.debug("Was invoked method - updateUser");
         return ResponseEntity.ok(userService.updateUser(userDto));
     }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateImage(@RequestPart MultipartFile image) throws IOException {
-        log.info("Was invoked method - updateImage");
+        log.debug("Was invoked method - updateImage");
         userService.updateImage(image);
         return ResponseEntity.ok().build();
     }

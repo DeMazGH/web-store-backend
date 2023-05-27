@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReq req) {
-        log.info("Was invoked method - login");
+        log.debug("Was invoked method - login");
         if (authService.login(req.getUsername(), req.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
@@ -35,7 +35,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterReq req) {
-        log.info("Was invoked method - register");
+        log.debug("Was invoked method - register");
         Role role = req.getRole() == null ? USER : req.getRole();
         if (authService.register(req, role)) {
             return ResponseEntity.ok().build();

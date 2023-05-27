@@ -31,6 +31,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final AdsRepository adsRepository;
     private final UserRepository userRepository;
+    private final CommentMapper commentMapper;
+    private final ResponseWrapperCommentDtoMapper responseWrapperCommentDtoMapper;
 
     /**
      * Метод принимает id объявления, получает список всех комментариев к данному объявлению и возвращает ответ в виде DTO.
@@ -40,8 +42,8 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public ResponseWrapperCommentDto getAdComments(int adId) {
-        log.info("Was invoked method - getAdComments");
-        return ResponseWrapperCommentDtoMapper.INSTANCE.toResponseWrapperCommentDto(commentRepository.findByAds_Id(adId));
+        log.debug("Was invoked method - getAdComments");
+        return responseWrapperCommentDtoMapper.toResponseWrapperCommentDto(commentRepository.findByAds_Id(adId));
     }
 
     /**
@@ -56,21 +58,21 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public CommentDto addCommentToAd(int adId, CreateCommentDto createdComment) throws AdNotFoundException {
-        log.info("Was invoked method - addCommentToAd");
+        log.debug("Was invoked method - addCommentToAd");
 
         Ads ad = adsRepository.findById(adId);
         if (ad == null) {
             throw new AdNotFoundException("Ad doesn't exist");
         }
 
-        Comment newComment = CommentMapper.INSTANCE.createCommentDtoToComment(createdComment);
+        Comment newComment = commentMapper.createCommentDtoToComment(createdComment);
         newComment.setCreatedAt(LocalDateTime.now());
         newComment.setAds(ad);
         newComment.setUser(userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()));
 
         Comment savedComment = commentRepository.save(newComment);
 
-        return CommentMapper.INSTANCE.commentToCommentDto(savedComment);
+        return commentMapper.commentToCommentDto(savedComment);
     }
 
     /**
@@ -80,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public void deleteAdsComment(int commentId) {
-        log.info("Was invoked method - deleteAdsComment");
+        log.debug("Was invoked method - deleteAdsComment");
         commentRepository.deleteById(commentId);
     }
 
@@ -95,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public CommentDto updateAdComment(int commentId, CommentDto newData) throws CommentNotFoundException {
-        log.info("Was invoked method - updateAdComment");
+        log.debug("Was invoked method - updateAdComment");
 
         Comment oldCommentData = commentRepository.findById(commentId);
         if (oldCommentData == null) {
@@ -106,12 +108,13 @@ public class CommentServiceImpl implements CommentService {
 
         Comment updatedComment = commentRepository.save(oldCommentData);
 
-        return CommentMapper.INSTANCE.commentToCommentDto(updatedComment);
+        return commentMapper.commentToCommentDto(updatedComment);
     }
 
     /**
      * Метод по id проверяет принадлежность комментария к объявлению.
-     * @param adId идентификатор объявления
+     *
+     * @param adId      идентификатор объявления
      * @param commentId идентификатор комментария
      * @return {@link true} - комментарий соответствует объявлению, {@link false} - не соответствует
      */

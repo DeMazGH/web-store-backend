@@ -50,7 +50,7 @@ public class ImageServiceImpl implements ImageService {
      */
     @Override
     public Image saveImage(Ads ad, MultipartFile adImage) throws IOException {
-        log.info("Was invoked method - saveImage");
+        log.debug("Was invoked method - saveImage");
 
         Path filePath = Path.of(imageDir, ad.getId() + "."
                 + StringUtils.getFilenameExtension(adImage.getOriginalFilename()));
@@ -74,7 +74,7 @@ public class ImageServiceImpl implements ImageService {
      */
     @Override
     public Avatar saveAvatar(User currentUser, MultipartFile avatarImage) throws IOException {
-        log.info("Was invoked method - updateImage");
+        log.debug("Was invoked method - updateImage");
 
         Path filePath = Path.of(avatarDir, currentUser.getEmail() + "."
                 + StringUtils.getFilenameExtension(avatarImage.getOriginalFilename()));
@@ -97,7 +97,7 @@ public class ImageServiceImpl implements ImageService {
      */
     @Override
     public Path getImagePath(int adId) throws ImageNotFoundException {
-        log.info("Was invoked method - getImagePath");
+        log.debug("Was invoked method - getImagePath");
         Image image = imageRepository.findImageByAdId(adId);
         if (image == null) {
             throw new ImageNotFoundException("Image doesn't exist");
@@ -115,7 +115,7 @@ public class ImageServiceImpl implements ImageService {
      */
     @Override
     public Path getAvatarPath(int userId) throws AvatarNotFoundException {
-        log.info("Was invoked method - getAvatarPath");
+        log.debug("Was invoked method - getAvatarPath");
         Avatar avatar = avatarRepository.findByUserId(userId);
         if (avatar == null) {
             throw new AvatarNotFoundException("Avatar doesn't exist");

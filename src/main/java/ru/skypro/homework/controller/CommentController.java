@@ -23,7 +23,7 @@ public class CommentController {
 
     @GetMapping("{ad_id}/comments")
     public ResponseEntity<ResponseWrapperCommentDto> getAdComments(@PathVariable("ad_id") int adId) {
-        log.info("Was invoked method - getAdComments");
+        log.debug("Was invoked method - getAdComments");
         return ResponseEntity.ok(commentService.getAdComments(adId));
     }
 
@@ -31,14 +31,14 @@ public class CommentController {
     @PostMapping("{ad_id}/comments")
     public ResponseEntity<CommentDto> addCommentToAd(@PathVariable("ad_id") int adId,
                                                      @RequestBody CreateCommentDto createdComment) {
-        log.info("Was invoked method - addAdsComment");
+        log.debug("Was invoked method - addAdsComment");
         return ResponseEntity.ok(commentService.addCommentToAd(adId, createdComment));
     }
 
     @DeleteMapping("{ad_id}/comments/{comment_id}")
     public ResponseEntity<Void> deleteAdsComment(@PathVariable("ad_id") int adId,
                                                  @PathVariable("comment_id") int commentId) {
-        log.info("Was invoked method - deleteAdsComment");
+        log.debug("Was invoked method - deleteAdsComment");
         if (!accessRightValidator.userHaveAccessToComment(commentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else if (!commentService.dataIsConsistent(adId, commentId)) {
@@ -53,7 +53,7 @@ public class CommentController {
     public ResponseEntity<CommentDto> updateAdComment(@PathVariable("ad_id") int adId,
                                                       @PathVariable("comment_id") int commentId,
                                                       @RequestBody CommentDto newData) {
-        log.info("Was invoked method - updateAdComment");
+        log.debug("Was invoked method - updateAdComment");
         if (!accessRightValidator.userHaveAccessToComment(commentId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else if (!commentService.dataIsConsistent(adId, commentId)) {

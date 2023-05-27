@@ -42,7 +42,7 @@ public class UserDetailManagerImpl implements UserDetailsManager {
      */
     @Override
     public boolean userExists(String email) {
-        log.info("Was invoked method - userExists");
+        log.debug("Was invoked method - userExists");
         return userRepository.findByEmail(email) != null;
     }
 
@@ -56,7 +56,7 @@ public class UserDetailManagerImpl implements UserDetailsManager {
      */
     @Override
     public UserDetails loadUserByUsername(String email) throws UserNotFoundException {
-        log.info("Was invoked method - loadUserByUsername");
+        log.debug("Was invoked method - loadUserByUsername");
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User doesn't exists");

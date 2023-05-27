@@ -22,44 +22,44 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        log.info("Was invoked method - getAuthorities");
+        log.debug("Was invoked method - getAuthorities");
         SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getRole().name());
         return List.of(grantedAuthority);
     }
 
     @Override
     public String getPassword() {
-        log.info("Was invoked method - getPassword");
+        log.debug("Was invoked method - getPassword");
         return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        log.info("Was invoked method - getUsername");
+        log.debug("Was invoked method - getUsername");
         return user.getEmail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        log.info("Was invoked method - isAccountNonExpired");
+        log.debug("Was invoked method - isAccountNonExpired");
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        log.info("Was invoked method - isAccountNonLocked");
+        log.debug("Was invoked method - isAccountNonLocked");
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        log.info("Was invoked method - isCredentialsNonExpired");
+        log.debug("Was invoked method - isCredentialsNonExpired");
         return true;
     }
 
     @Override
     public boolean isEnabled() {
-        log.info("Was invoked method - isEnabled");
+        log.debug("Was invoked method - isEnabled");
         return true;
     }
 }

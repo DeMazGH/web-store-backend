@@ -38,7 +38,7 @@ public class AccessRightValidatorImpl implements AccessRightValidator {
      */
     @Override
     public boolean userHaveAccessToComment(int commentId) throws CommentNotFoundException {
-        log.info("Was invoked method - userHaveAccessToComment");
+        log.debug("Was invoked method - userHaveAccessToComment");
 
         User currentUser = getAuthUser();
         if (currentUser == null) {
@@ -70,7 +70,7 @@ public class AccessRightValidatorImpl implements AccessRightValidator {
      */
     @Override
     public boolean userHaveAccessToAd(int adId) throws AdNotFoundException {
-        log.info("Was invoked method - userHaveAccessToAd");
+        log.debug("Was invoked method - userHaveAccessToAd");
 
         User currentUser = getAuthUser();
         if (currentUser == null) {
