@@ -2,6 +2,7 @@ package ru.skypro.homework.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Avatar {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
     public String getAvatarApi() {

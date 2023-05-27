@@ -23,12 +23,5 @@ public interface CommentMapper {
     @Mapping(source = "comment.user.firstName", target = "authorFirstName")
     CommentDto commentToCommentDto(Comment comment, String userAvatarApi);
 
-    @Mapping(source = "pk", target = "id")
-    @Mapping(source = "author", target = "user.id")
-    @Mapping(source = "authorFirstName", target = "user.firstName")
-    Comment commentDtoToComment(CommentDto commentDto);
-
     Comment createCommentDtoToComment(CreateCommentDto createCommentDto);
-
-    CreateCommentDto commentToCreateCommentDto(Comment comment);
 }

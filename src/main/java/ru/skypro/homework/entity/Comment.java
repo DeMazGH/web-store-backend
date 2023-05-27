@@ -1,7 +1,9 @@
 package ru.skypro.homework.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Comment {
 
     @Id
@@ -19,9 +22,11 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "ads_id")
+    @ToString.Exclude
     private Ads ads;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 }
