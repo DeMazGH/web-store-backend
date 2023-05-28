@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateCommentDto;
+import ru.skypro.homework.entity.Avatar;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.mapper.util.DateMapper;
 
@@ -11,7 +12,11 @@ import ru.skypro.homework.mapper.util.DateMapper;
 public interface CommentMapper {
 
     default CommentDto commentToCommentDto(Comment comment) {
-        return commentToCommentDto(comment, comment.getUser().getAvatar().getAvatarApi());
+        Avatar avatar = comment.getUser().getAvatar();
+        if (avatar == null) {
+            return commentToCommentDto(comment, null);
+        }
+        return commentToCommentDto(comment, avatar.getAvatarApi());
     }
 
     @Mapping(source = "comment.id", target = "pk")
