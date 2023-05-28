@@ -29,5 +29,7 @@ public class User {
     private Avatar avatar;
 
     private String password;
+
+    @Enumerated(value = EnumType.STRING)
     private Role role;
 }
