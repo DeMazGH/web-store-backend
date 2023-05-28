@@ -15,3 +15,7 @@ create table if not exists users(
 -- changeset demaz:2
 alter table users drop column image;
 alter table users add column avatar_id int;
+
+-- changeset demaz:3
+alter table users drop column role;
+alter table users add column role varchar(255);
