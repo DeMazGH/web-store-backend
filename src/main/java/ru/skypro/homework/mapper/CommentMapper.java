@@ -13,10 +13,7 @@ public interface CommentMapper {
 
     default CommentDto commentToCommentDto(Comment comment) {
         Avatar avatar = comment.getUser().getAvatar();
-        if (avatar == null) {
-            return commentToCommentDto(comment, null);
-        }
-        return commentToCommentDto(comment, avatar.getAvatarApi());
+        return commentToCommentDto(comment, avatar == null ? null : avatar.getAvatarApi());
     }
 
     @Mapping(source = "comment.id", target = "pk")
