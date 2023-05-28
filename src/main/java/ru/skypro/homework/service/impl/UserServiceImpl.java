@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ImageServiceImpl imageService;
     private final PasswordEncoder encoder;
+    private final UserMapper userMapper;
 
     /**
      * Метод принимает данные в виде DTO о текущем и новом паролях,
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean setPassword(NewPasswordDto newPasswordDto) {
-        log.info("Was invoked method - setPassword");
+        log.debug("Was invoked method - setPassword");
         User currentUser = getAuthUser();
         if (!encoder.matches(newPasswordDto.getCurrentPassword(), currentUser.getPassword())) {
             return false;
@@ -57,9 +58,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto getMe() {
-        log.info("Was invoked method - getMe");
+        log.debug("Was invoked method - getMe");
         User currentUser = getAuthUser();
-        return UserMapper.INSTANCE.userToUserDto(currentUser);
+        return userMapper.userToUserDto(currentUser);
     }
 
     /**
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto updateUser(UserDto userDto) {
-        log.info("Was invoked method - updateUser");
+        log.debug("Was invoked method - updateUser");
         User oldUserData = getAuthUser();
 
         oldUserData.setFirstName(userDto.getFirstName());
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
         User newUserData = userRepository.save(oldUserData);
 
-        return UserMapper.INSTANCE.userToUserDto(newUserData);
+        return userMapper.userToUserDto(newUserData);
     }
 
     /**
@@ -91,7 +92,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateImage(MultipartFile avatar) throws IOException {
-        log.info("Was invoked method - updateImage");
+        log.debug("Was invoked method - updateImage");
 
         User currentUser = getAuthUser();
         imageService.deleteAvatar(currentUser.getId());

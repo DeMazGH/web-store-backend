@@ -83,6 +83,8 @@ public class ConstantsTest {
     public static final List<AdsDto> ADS_DTO_LIST = new ArrayList<>();
 
 
+    public static final ResponseWrapperCommentDto RESPONSE_WRAPPER_COMMENT_DTO = new ResponseWrapperCommentDto();
+
     public static final String USER_AVATAR_API_1 = "/images/avatar/1";
     public static final String AD_IMAGE_API_1 = "/images/ads/1";
 
@@ -154,5 +156,8 @@ public class ConstantsTest {
 
         ADS_DTO_LIST.add(ADS_DTO_TEST_1);
         ADS_DTO_LIST.add(ADS_DTO_TEST_2);
+
+        RESPONSE_WRAPPER_COMMENT_DTO.setCount(COMMENT_LIST.size());
+        RESPONSE_WRAPPER_COMMENT_DTO.setResults(COMMENT_DTO_LIST);
     }
 }
