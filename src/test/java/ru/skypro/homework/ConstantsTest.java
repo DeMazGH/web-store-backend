@@ -56,14 +56,15 @@ public class ConstantsTest {
 
     public static final Integer COMMENT_ID_1 = 1;
     public static final Integer COMMENT_ID_2 = 2;
-    public static final String TEXT = "text";
+    public static final String TEXT_1 = "text";
+    public static final String TEXT_2 = "text2";
     public static final LocalDateTime CREATED_AT_LOCAL_DATE_TIME
             = LocalDateTime.of(2000, 10, 10, 10, 10);
     public static final long CREATED_AT_LONG = CREATED_AT_LOCAL_DATE_TIME
             .toInstant(ZoneOffset.systemDefault().getRules().getOffset(CREATED_AT_LOCAL_DATE_TIME)).toEpochMilli();
 
-    public static final Comment COMMENT_TEST_1 = new Comment(COMMENT_ID_1, TEXT, CREATED_AT_LOCAL_DATE_TIME, ADS_TEST_1, USER_TEST);
-    public static final Comment COMMENT_TEST_2 = new Comment(COMMENT_ID_2, TEXT, CREATED_AT_LOCAL_DATE_TIME, ADS_TEST_1, USER_TEST);
+    public static final Comment COMMENT_TEST_1 = new Comment(COMMENT_ID_1, TEXT_1, CREATED_AT_LOCAL_DATE_TIME, ADS_TEST_1, USER_TEST);
+    public static final Comment COMMENT_TEST_2 = new Comment(COMMENT_ID_2, TEXT_1, CREATED_AT_LOCAL_DATE_TIME, ADS_TEST_1, USER_TEST);
 
 
     public static final UserDto USER_DTO_TEST = new UserDto();
@@ -108,14 +109,14 @@ public class ConstantsTest {
         COMMENT_DTO_TEST_1.setAuthorFirstName(FIRST_NAME);
         COMMENT_DTO_TEST_1.setCreatedAt(CREATED_AT_LONG);
         COMMENT_DTO_TEST_1.setPk(COMMENT_ID_1);
-        COMMENT_DTO_TEST_1.setText(TEXT);
+        COMMENT_DTO_TEST_1.setText(TEXT_1);
 
         COMMENT_DTO_TEST_2.setAuthor(USER_ID);
         COMMENT_DTO_TEST_2.setAuthorImage(USER_AVATAR_API_1);
         COMMENT_DTO_TEST_2.setAuthorFirstName(FIRST_NAME);
         COMMENT_DTO_TEST_2.setCreatedAt(CREATED_AT_LONG);
         COMMENT_DTO_TEST_2.setPk(COMMENT_ID_2);
-        COMMENT_DTO_TEST_2.setText(TEXT);
+        COMMENT_DTO_TEST_2.setText(TEXT_2);
 
         COMMENT_LIST.add(COMMENT_TEST_1);
         COMMENT_LIST.add(COMMENT_TEST_2);
@@ -123,7 +124,7 @@ public class ConstantsTest {
         COMMENT_DTO_LIST.add(COMMENT_DTO_TEST_1);
         COMMENT_DTO_LIST.add(COMMENT_DTO_TEST_2);
 
-        CREATE_COMMENT_DTO_TEST.setText(TEXT);
+        CREATE_COMMENT_DTO_TEST.setText(TEXT_1);
 
         ADS_DTO_TEST_1.setAuthor(USER_ID);
         ADS_DTO_TEST_1.setImage(AD_IMAGE_API_1);
