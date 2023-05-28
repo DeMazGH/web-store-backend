@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static ru.skypro.homework.ConstantsTest.*;
 
-//Тесты в работе
 @SpringBootTest
 class CommentServiceImplTest {
 
