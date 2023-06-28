@@ -27,7 +27,7 @@ https://github.com/DeMazGH/web-store-backend/blob/master/openapi.yaml
 
 
 ## Технологии в проекте
-Язык и окружение - Java 11, Spring Boot/Web/Security, Hibernate, PostgreSQL, Liquibase, Lombok, MupStruct    
+Язык и окружение - Java 11, Spring Boot/Web/Security, Hibernate, PostgreSQL, Liquibase, Lombok, MapStruct    
 Тестирование - JUnit, Mockito  
 Прочее - Docker  
 
